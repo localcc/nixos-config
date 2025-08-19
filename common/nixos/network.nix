@@ -1,0 +1,43 @@
+{
+  config, inputs, ...
+}:
+{
+  networking.networkmanager.enable = true;
+
+  # mdns
+  services.avahi.enable = false;
+  services.resolved.enable = true;
+
+  # ssh
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = false;
+    };
+  };
+
+  # wifi
+  age.secrets.wifi-home.file = (inputs.self + /secrets/wifi-home.age);
+  networking.networkmanager.ensureProfiles = {
+    environmentFiles = [
+      config.age.secrets.wifi-home.path
+    ];
+
+    profiles = {
+      Home = {
+        connection = {
+          id = "$HOME_SSID";
+          type = "wifi";
+        };
+        wifi = {
+          mode = "infrastructure";
+          ssid = "$HOME_SSID";
+        };
+        wifi-security = {
+          key-mgmt = "wpa-psk";
+          psk = "$HOME_PSK";
+        };
+      };
+    };
+  };
+}
