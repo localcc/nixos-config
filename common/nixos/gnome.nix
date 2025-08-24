@@ -78,7 +78,9 @@ in
               enable-hot-corners = false;
               gtk-enable-primary-paste = false;
             };
-
+            "org/gnome/desktop/background" = {
+              picture-uri-dark = "file://${inputs.self + /assets/wallpaper.webp}";
+            };
             # dock
             "org/gnome/shell" = {
               favorite-apps = with cfg.dockItems; left ++ middle ++ right;
