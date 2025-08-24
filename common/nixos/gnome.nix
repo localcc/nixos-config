@@ -32,6 +32,18 @@ in
           "org.gnome.Console.desktop"
         ];
       };
+
+      shellExtensions = lib.mkOption {
+        type = lib.types.listOf lib.types.package;
+        description = "List of packages containing GNOME Shell Extensions";
+        default =
+          with pkgs;
+          with pkgs.gnomeExtensions;
+          [
+            appindicator
+          ];
+      };
+
       extraDconfOptions = lib.mkOption { type = lib.types.attrsOf lib.types.anything; };
     };
   };
@@ -44,6 +56,8 @@ in
       displayManager.gdm.enable = true;
       desktopManager.gnome.enable = true;
     };
+
+    environment.systemPackages = cfg.shellExtensions;
 
     # remove gnome tour and web browser
     environment.gnome.excludePackages = [
@@ -81,9 +95,10 @@ in
             "org/gnome/desktop/background" = {
               picture-uri-dark = "file://${inputs.self + /assets/wallpaper.webp}";
             };
-            # dock
+            # dock & extensions
             "org/gnome/shell" = {
               favorite-apps = with cfg.dockItems; left ++ middle ++ right;
+              enabled-extensions = map (p: p.extensionUuid) cfg.shellExtensions;
             };
           } // cfg.extraDconfOptions;
         }

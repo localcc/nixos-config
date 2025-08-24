@@ -22,6 +22,7 @@
 
   services.fwupd.enable = true;
 
+  services.tailscale.enable = true;
   services.mullvad-vpn = {
     enable = true;
     package = pkgs.mullvad-vpn;
@@ -46,6 +47,7 @@
       zed-editor
       discord
       parsec-bin
+      trayscale
 
       (microsoft-edge.override {
         commandLineArgs = [
