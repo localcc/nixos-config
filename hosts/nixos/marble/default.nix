@@ -1,53 +1,10 @@
 {
   lib, inputs, config, pkgs, unstable, ...
 }:
-let
-  pipewire' = pkgs.pipewire.overrideAttrs (old: {
-    # name = "pulseaudio-patched";
-    pname = "${old.pname}-patched-with-pcm-control";
-    # Instead of overriding some post-build action, which would require a
-    # pulseaudio rebuild, we override the entire `buildCommand` to produce
-    # its outputs by copying the original package's files (much faster).
-    buildCommand = ''
-      set -euo pipefail
-
-      ${ # Copy original files, for each split-output (`out`, `dev` etc.).
-      lib.concatStringsSep "\n" (map (outputName: ''
-        echo "Copying output ${outputName}"
-        set -x
-        cp -a ${pkgs.pipewire.${outputName}} ''$${outputName}
-        set +x
-      '') old.outputs)}
-
-      # Find this file: /nix/store/vr4mv8jppbvr96ml2chlgikmy6f9crb7-pipewire-0.3.80-lib/share/alsa-card-profile/mixer/paths/analog-output.conf.common
-      #   and add these three lines:
-      #
-      #   [Element Master]
-      #   switch = mute
-      #   volume = ignore
-      #
-      # Directly above of this part of code:
-      #
-      #   [Element PCM]
-      #   switch = mute
-      #   volume = merge
-      #   override-map.1 = all
-      #   override-map.2 = all-left,all-right
-      set -x
-      INFILE=$out/share/alsa-card-profile/mixer/paths/analog-output.conf.common
-      sed 's/\[Element PCM\]/\[Element Master\]\nswitch = mute\nvolume = ignore\n\n[Element PCM]/' $INFILE > tmp.conf
-      # Ensure file changed (something was replaced)
-      ! cmp tmp.conf $INFILE
-      chmod +w $out/share/alsa-card-profile/mixer/paths/analog-output.conf.common
-      cp tmp.conf $INFILE
-      set +x
-    '';
-  });
-  wireplumber' = (pkgs.wireplumber.override { pipewire = pipewire'; });
-in
 {
   imports = [
     ./hardware-configuration.nix
+    ./alsa.nix
     inputs.chaotic.nixosModules.nyx-cache
     inputs.chaotic.nixosModules.nyx-overlay
     inputs.chaotic.nixosModules.nyx-registry
@@ -69,21 +26,37 @@ in
   boot.kernelPackages = pkgs.linuxPackages_cachyos;
 
   # GPU
+  services.xserver.videoDrivers = ["nvidia"];
+
+  hardware.graphics.enable = true;
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = false;
     powerManagement.finegrained = false;
+
     # use nvidia opensource driver (not nouveau!!)
     open = true;
     nvidiaSettings = true;
-  };
 
-  # Sound quirk
-  # services.pipewire.package = pkgs.pipewire.overrideAttrs ({ patches ? [], ... }: {
-  #   patches = [ ./patches/analog-output.conf.common.patch ] ++ patches;
-  # });
-  services.pipewire.package = pipewire';
-  services.pipewire.wireplumber.package = wireplumber';
+    prime = {
+      offload = {
+        enable = true;
+        enableOffloadCmd = true;
+      };
+
+      amdgpuBusId = "PCI:101:0:0";
+      nvidiaBusId = "PCI:100:0:0";
+    };
+
+    package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
+      version = "580.76.05";
+      sha256_64bit = "sha256-IZvmNrYJMbAhsujB4O/4hzY8cx+KlAyqh7zAVNBdl/0=";
+      sha256_aarch64 = "sha256-NL2DswzVWQQMVM092NmfImqKbTk9VRgLL8xf4QEvGAQ=";
+      openSha256 = "sha256-xEPJ9nskN1kISnSbfBigVaO6Mw03wyHebqQOQmUg/eQ=";
+      settingsSha256 = "sha256-ll7HD7dVPHKUyp5+zvLeNqAb6hCpxfwuSyi+SAXapoQ=";
+      persistencedSha256 = "sha256-bs3bUi8LgBu05uTzpn2ugcNYgR5rzWEPaTlgm0TIpHY=";
+    };
+  };
 
   # Security
   security.polkit.enable = true;
