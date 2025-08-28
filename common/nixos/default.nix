@@ -22,6 +22,12 @@
 
   services.fwupd.enable = true;
 
+  # shebang support for scripts
+  services.envfs.enable = true;
+
+  # unpackaged executables
+  programs.nix-ld.enable = true;
+
   services.tailscale.enable = true;
   services.mullvad-vpn = {
     enable = true;
