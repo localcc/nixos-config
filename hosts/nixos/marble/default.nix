@@ -58,6 +58,36 @@
     };
   };
 
+  # NVIDIA Nsight
+  environment.systemPackages =
+    with pkgs;
+    [
+      cudaPackages.nsight_systems
+    ];
+  programs.nix-ld.libraries = with pkgs; [
+    libGL
+    libxkbcommon
+    glib
+    libpng
+    fontconfig
+    xorg.libX11
+    xorg.libxcb
+    xorg.xcbutil
+    xorg.libSM
+    xorg.xcbutilimage
+    xorg.xcbutilkeysyms
+    xorg.xcbutilrenderutil
+    xorg.xcbutilwm
+    xorg.libXext
+    xcb-proto
+    xcb-imdkit
+    xcb-util-cursor
+    dbus
+    krb5
+    freetype
+    libsForQt5.qt5.qtwayland
+  ];
+
   # Security
   security.polkit.enable = true;
 
