@@ -77,6 +77,7 @@ in
               sources = [
                 (lib.gvariant.mkTuple [ "xkb" "us" ])
                 (lib.gvariant.mkTuple [ "xkb" "ru" ])
+                # (lib.gvariant.mkTuple [ "ibus" "pinyin" ])
               ];
             };
             # time & date

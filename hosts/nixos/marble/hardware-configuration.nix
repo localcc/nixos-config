@@ -27,6 +27,11 @@
     };
   };
 
+  swapDevices = [ {
+    device = "/var/lib/swapfile";
+    size = 64 * 1024;
+  }];
+
   boot.initrd.luks.devices."cryptroot".device = "/dev/disk/by-uuid/6930c73b-81c7-446c-820b-5a754864e6b0";
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
