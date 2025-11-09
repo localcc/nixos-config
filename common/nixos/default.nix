@@ -4,6 +4,7 @@
 {
   imports = [
     ./gnome.nix
+    ./niri.nix
     ./user.nix
     ./localization.nix
     ./network.nix
@@ -19,6 +20,8 @@
   #   themePackage = pkgs.plymouth-matrix-theme;
   #   theme = "matrix";
   # };
+  boot.binfmt.preferStaticEmulators = true;
+  boot.binfmt.emulatedSystems = [ "powerpc64-linux" ];
 
   services.fwupd.enable = true;
 
@@ -36,28 +39,45 @@
 
   programs._1password.enable = true;
   programs._1password-gui.enable = true;
+  programs.localsend.enable = true;
   environment.systemPackages =
     with pkgs;
+    let
+      unstable = import inputs.nixpkgs-unstable { inherit system; };
+    in
     [
       # basic dev
       gh
       git
       neovim
       ripgrep
+      cmake
+      clang_20
+      ninja
+      python313
+      meson
+
+      # gnu (ew)
+      gnumake
+      gcc15
+
+      # ps3 dev
+      qemu-user
 
       # rust dev
-      rust-bin.stable."1.88.0".default
+      rust-bin.stable."1.90.0".default
 
       # apps
       telegram-desktop
-      zed-editor
+      unstable.zed-editor
       discord
       parsec-bin
       trayscale
+      obsidian
 
       (microsoft-edge.override {
         commandLineArgs = [
-          "--enable-features=TouchpadOverscrollHistoryNavigation,Vulkan,VaapiVideoDecoder,VaapiIgnoreDriverChecks,DefaultANGLEVulkan,VulkanFromANGLE"
+          "--enable-features=TouchpadOverscrollHistoryNavigation,VaapiVideoDecodeLinuxGL,VaapiVideoEncoder,VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport,UseMultiPlaneFormatForHardwareVideo"
           "--disable-features=GlobalShortcutsPortal" # https://issues.chromium.org/issues/404298968
         ];
       })
