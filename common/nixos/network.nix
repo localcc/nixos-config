@@ -1,5 +1,7 @@
 {
-  config, inputs, ...
+  config,
+  inputs,
+  ...
 }:
 {
   networking.networkmanager.enable = true;

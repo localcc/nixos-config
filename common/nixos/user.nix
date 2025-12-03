@@ -1,5 +1,8 @@
 {
-  inputs, pkgs, config, ...
+  inputs,
+  pkgs,
+  config,
+  ...
 }:
 {
   age.secrets.kate-password.file = (inputs.secrets + /kate-password.age);

@@ -1,26 +1,48 @@
 {
-  lib, inputs, config, pkgs, ...
+  inputs,
+  config,
+  pkgs,
+  ...
 }:
 {
   imports = [
     ./hardware-configuration.nix
     ./alsa.nix
+    ../../../common/nixos/gnome.nix
     inputs.chaotic.nixosModules.nyx-cache
     inputs.chaotic.nixosModules.nyx-overlay
     inputs.chaotic.nixosModules.nyx-registry
   ];
 
+  gnome.enable = true;
+
+  home-manager.users.kate = {
+    imports = [
+      ../../../common/home/gnome.nix
+    ];
+    gnome.enable = true;
+
+    # do not remove
+    home.stateVersion = "25.11";
+  };
+
+  environment.pathsToLink = [
+    "/share/applications"
+    "/share/xdg-desktop-portal"
+  ];
+
   # DE
-  # gnome = {
+  # niri = {
   #   enable = true;
-  #   extraDconfOptions = {
-  #     # keybindings
-  #     "org/gnome/shell/keybindings" = {
-  #       show-screenshot-ui = [ "F6" ];
-  #     };
+
+  #   settings = {
+  #     touchpad.scrollFactor = "0.5";
+
+  #     binds = ''
+  #       F6 { screenshot; }
+  #     '';
   #   };
-  #  };
-  niri.enable = true;
+  # };
 
   # Boot
   boot.secureboot.enable = true;
@@ -43,10 +65,10 @@
   # networking.interfaces.enp103s0f3u1u2.useDHCP = true;
 
   # GPU
-  services.xserver.videoDrivers = ["nvidia"];
+  services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware.graphics.enable = true;
-  hardware.graphics.extraPackages = [ pkgs.vaapiVdpau ];
+  hardware.graphics.extraPackages = [ pkgs.libva-vdpau-driver ];
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = false;
@@ -90,39 +112,13 @@
     localNetworkGameTransfers.openFirewall = true;
   };
 
-  # NVIDIA Nsight
-  # environment.systemPackages =
-  #   with pkgs;
-  #   [
-  #     cudaPackages.nsight_systems
-  #   ];
-  # programs.nix-ld.libraries = with pkgs; [
-  #   libGL
-  #   libxkbcommon
-  #   glib
-  #   libpng
-  #   fontconfig
-  #   xorg.libX11
-  #   xorg.libxcb
-  #   xorg.xcbutil
-  #   xorg.libSM
-  #   xorg.xcbutilimage
-  #   xorg.xcbutilkeysyms
-  #   xorg.xcbutilrenderutil
-  #   xorg.xcbutilwm
-  #   xorg.libXext
-  #   xcb-proto
-  #   xcb-imdkit
-  #   xcb-util-cursor
-  #   dbus
-  #   krb5
-  #   freetype
-  #   libsForQt5.qt5.qtwayland
-  # ];
+  environment.systemPackages = with pkgs; [
+    nodejs_24
+  ];
 
   # Security
   security.polkit.enable = true;
 
   # Do not remove
-  system.stateVersion = "24.05";
+  system.stateVersion = "25.11";
 }

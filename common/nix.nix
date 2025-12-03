@@ -1,5 +1,6 @@
 {
-  inputs, config, pkgs, ...
+  inputs,
+  ...
 }:
 {
   # overlays
