@@ -3,7 +3,7 @@
 }:
 {
   imports = [
-    ./me.nix
+    ./users.nix
     ./nix.nix
     inputs.agenix.nixosModules.default
   ];
@@ -15,6 +15,8 @@
   # age
   environment.systemPackages = [
     pkgs.agenix
+    pkgs.nil
+    pkgs.nixd
   ];
 
   networking.hostName = hostname;

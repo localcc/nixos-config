@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     agenix = {
@@ -9,7 +9,7 @@
     };
 
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.2";
+      url = "github:nix-community/lanzaboote/v0.4.3";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -27,6 +27,16 @@
     niri = {
       url = "github:sodiboo/niri-flake";
       inputs.niri-unstable.follows = "niri-unstable";
+    };
+
+    matugen = {
+       url = "github:/InioX/Matugen";
+       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    home-manager = {
+      url = "github:nix-community/home-manager/release-25.11";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
   outputs =
@@ -46,6 +56,12 @@
               ./common
               ./common/${system}
               { config._module.args = { inherit hostname; }; }
+              inputs.home-manager.nixosModules.home-manager
+              {
+                home-manager.extraSpecialArgs = { inherit inputs; };
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+              }
             ];
           };
           key = "${system}Configurations";

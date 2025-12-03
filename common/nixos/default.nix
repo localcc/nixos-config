@@ -1,11 +1,15 @@
 {
-  pkgs, inputs, hostname, lib, ...
+  pkgs,
+  inputs,
+  ...
 }:
 {
   imports = [
-    ./gnome.nix
-    ./niri.nix
-    ./user.nix
+    # ./gnome.nix
+    # ./niri.nix
+    # ./greetd.nix
+    # ./user.nix
+    ./gdm.nix
     ./localization.nix
     ./network.nix
     ./splash.nix
@@ -71,7 +75,7 @@
       telegram-desktop
       unstable.zed-editor
       discord
-      parsec-bin
+      # parsec-bin
       trayscale
       obsidian
 
