@@ -35,8 +35,8 @@
     };
 
     matugen = {
-       url = "github:/InioX/Matugen";
-       inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:/InioX/Matugen";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     home-manager = {
@@ -81,7 +81,7 @@
       hosts = builtins.concatMap (
         system:
         let
-          hostnames = builtins.attrNames (builtins.readDir (./hosts/${system}));
+          hostnames = builtins.attrNames (builtins.readDir ./hosts/${system});
         in
         map (hostname: mkHost system hostname) hostnames
       ) systems;
