@@ -16,14 +16,19 @@
 
   gdm.enable = true;
   niri.enable = true;
+  niri.exo = true;
 
   home-manager.users.kate = {
     imports = [
       ../../../common/home/niri.nix
+      ../../../common/home/niri-exo.nix
     ];
 
     niri = {
       enable = true;
+      exo = true;
+      wallpaper = (inputs.self + /assets/wallpaper.webp);
+
       binds = {
         "F6".action.screenshot = { };
       };
@@ -33,6 +38,21 @@
       };
 
       outputs."DP-10" = {
+        mode = {
+          width = 2560;
+          height = 1440;
+          refresh = 143.981;
+        };
+
+        position = {
+          x = 0;
+          y = 0;
+        };
+
+        focus-at-startup = true;
+      };
+
+      outputs."DP-11" = {
         mode = {
           width = 2560;
           height = 1440;

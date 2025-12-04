@@ -27,6 +27,21 @@ in
         type = lib.types.attrsOf lib.types.anything;
         description = "Outputs settings";
       };
+
+      spawn-at-startup = lib.mkOption {
+        type = lib.types.listOf (lib.types.attrsOf lib.types.anything);
+        description = "SH files to start at startup";
+      };
+
+      animations = lib.mkOption {
+        type = lib.types.attrsOf lib.types.anything;
+        description = "Animation settings";
+      };
+
+      layout = lib.mkOption {
+        type = lib.types.attrsOf lib.types.anything;
+        description = "Additional layout settings";
+      };
     };
   };
 
@@ -42,23 +57,22 @@ in
     };
     services.swayidle.enable = true;
 
-    programs.swaylock.enable = true;
-
-    home.packages =
-      with pkgs;
-      let
-        unstable = import inputs.nixpkgs-unstable { inherit system; };
-      in
-      [
-        rio # terminal
-        unstable.anyrun # runner
-        swaynotificationcenter
-        brightnessctl # brightness
-        gcr # system prompter
-        nautilus # file manager
-
-        xwayland-satellite # xwayland s upport
+    xdg.portal = {
+      enable = true;
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-gnome
+        xdg-desktop-portal-gtk
       ];
+    };
+
+    home.packages = with pkgs; [
+      rio # terminal
+      brightnessctl # brightness
+      gcr # system prompter
+      nautilus # file manager
+
+      xwayland-satellite # xwayland support
+    ];
 
     programs.niri.settings = {
       input = {
@@ -96,12 +110,16 @@ in
           proportion = 0.5;
         };
 
-        focus-ring = {
-          width = 4;
-          active.color = "#7fc8ff";
-          inactive.color = "#505050";
+        shadow = {
+          softness = 20;
+          spread = 5;
+          offset = {
+            x = 0;
+            y = 5;
+          };
         };
-      };
+      }
+      // cfg.layout;
 
       hotkey-overlay.skip-at-startup = true;
 
@@ -129,6 +147,10 @@ in
               app-id = "org.gnome.Nautilus";
               title = "Open Files";
             }
+            {
+              app-id = "org.telegram.desktop";
+              title = "Media viewer";
+            }
           ];
           open-floating = true;
         }
@@ -153,7 +175,6 @@ in
       ];
 
       spawn-at-startup = [
-        { argv = [ "waybar" ]; }
         {
           argv = [
             "1password"
@@ -163,8 +184,10 @@ in
         { argv = [ "microsoft-edge" ]; }
         { argv = [ "discord" ]; }
         { argv = [ "Telegram" ]; }
-      ];
+      ]
+      ++ cfg.spawn-at-startup;
 
+      animations = cfg.animations;
       outputs = cfg.outputs;
 
       binds = {
@@ -173,14 +196,6 @@ in
         "Mod+T" = {
           hotkey-overlay.title = "Open a Terminal";
           action.spawn = "rio";
-        };
-        "Mod+D" = {
-          hotkey-overlay.title = "Run an Application";
-          action.spawn = "anyrun";
-        };
-        "Super+L" = {
-          hotkey-overlay.title = "Lock the Screen";
-          action.spawn = "swaylock";
         };
 
         "XF86AudioRaiseVolume" = {
@@ -362,7 +377,6 @@ in
         };
 
         "Mod+Shift+E".action.quit = { };
-        "Ctrl+Alt+Delete".action.quit = { };
 
         "Mod+Shift+P".action.power-off-monitors = { };
       }
