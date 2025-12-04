@@ -55,6 +55,7 @@ in
         swaynotificationcenter
         brightnessctl # brightness
         gcr # system prompter
+        nautilus # file manager
 
         xwayland-satellite # xwayland s upport
       ];
@@ -120,6 +121,16 @@ in
         {
           matches = [ { app-id = "microsoft-edge"; } ];
           open-on-workspace = "browser";
+        }
+
+        {
+          matches = [
+            {
+              app-id = "org.gnome.Nautilus";
+              title = "Open Files";
+            }
+          ];
+          open-floating = true;
         }
 
         {
@@ -356,6 +367,15 @@ in
         "Mod+Shift+P".action.power-off-monitors = { };
       }
       // cfg.binds;
+    };
+
+    dconf.settings = {
+      # appearance
+      "org/gnome/desktop/interface" = {
+        color-scheme = "prefer-dark";
+        enable-hot-corners = false;
+        gtk-enable-primary-paste = false;
+      };
     };
   };
 }
