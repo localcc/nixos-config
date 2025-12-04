@@ -24,6 +24,10 @@
       ../../../common/home/niri-exo.nix
     ];
 
+    home.packages = with pkgs; [
+      slack
+    ];
+
     niri = {
       enable = true;
       exo = true;
