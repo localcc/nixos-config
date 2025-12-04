@@ -12,6 +12,21 @@ in
   options = {
     niri = {
       enable = lib.mkEnableOption "niri";
+
+      binds = lib.mkOption {
+        type = lib.types.attrsOf lib.types.anything;
+        description = "Additional niri keybindings";
+      };
+
+      touchpad = lib.mkOption {
+        type = lib.types.attrsOf lib.types.anything;
+        description = "Additional touchpad settings";
+      };
+
+      outputs = lib.mkOption {
+        type = lib.types.attrsOf lib.types.anything;
+        description = "Outputs settings";
+      };
     };
   };
 
@@ -60,10 +75,8 @@ in
           tap-button-map = "left-right-middle";
           click-method = "clickfinger";
           natural-scroll = true;
-
-          # todo: device specific
-          scroll-factor = 0.5;
-        };
+        }
+        // cfg.touchpad;
       };
 
       gestures.hot-corners.enable = false;
@@ -140,6 +153,8 @@ in
         { argv = [ "discord" ]; }
         { argv = [ "Telegram" ]; }
       ];
+
+      outputs = cfg.outputs;
 
       binds = {
         "Mod+Shift+Slash".action.show-hotkey-overlay = { };
@@ -327,7 +342,6 @@ in
 
         "Mod+W".action.toggle-column-tabbed-display = { };
 
-        "F6".action.screenshot = { };
         "Ctrl+Print".action.screenshot-screen = { };
         "Alt+Print".action.screenshot-window = { };
 
@@ -340,7 +354,8 @@ in
         "Ctrl+Alt+Delete".action.quit = { };
 
         "Mod+Shift+P".action.power-off-monitors = { };
-      };
+      }
+      // cfg.binds;
     };
   };
 }
