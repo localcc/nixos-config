@@ -34,13 +34,28 @@
       inputs.niri-unstable.follows = "niri-unstable";
     };
 
-    matugen = {
-      url = "github:/InioX/Matugen";
+    home-manager = {
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+    ignis = {
+      url = "github:/ignis-sh/ignis/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    ignis-gvc = {
+      url = "github:/ignis-sh/ignis-gvc/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    matugen = {
+      url = "github:/localcc/Matugen/fix-nix-module";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    awww = {
+      url = "git+https://codeberg.org/LGFae/awww";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

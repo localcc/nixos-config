@@ -1,0 +1,42 @@
+{
+  "appearance": {
+    "wallcolors": {
+      "color_scheme": "tonal-spot",
+      "auto_dark": {}
+    }
+  },
+  "interface": {
+    "modules": {
+      "location": {},
+      "visibility": {
+        "launcher": true
+      },
+      "bar_id": {},
+      "options": {
+        "workspaces_style": "windows",
+        "fixed_workspaces_enabled": false,
+        "military_time": true
+      }
+    },
+    "bar": {
+      "side": "right",
+      "vertical": true,
+      "floating": false
+    },
+    "bar2": {
+      "enabled": false,
+      "floating": false,
+      "side": "top",
+      "vertical": false
+    },
+    "notifications": {},
+    "launcher": {},
+    "misc": {
+      "shell_corners": false
+    }
+  },
+  "services": {
+    "recorder": {},
+    "osd": {}
+  }
+}
