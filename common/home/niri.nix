@@ -43,7 +43,6 @@ in
     services.swayidle.enable = true;
 
     programs.swaylock.enable = true;
-    services.gnome-keyring.enable = true;
 
     home.packages =
       with pkgs;
@@ -55,6 +54,7 @@ in
         unstable.anyrun # runner
         swaynotificationcenter
         brightnessctl # brightness
+        gcr # system prompter
 
         xwayland-satellite # xwayland s upport
       ];
