@@ -15,6 +15,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    services.gnome.gnome-keyring.enable = true;
     security.pam.services.swaylock = { };
     gdm.sessionPackages = [ pkgs.niri-unstable ];
   };
