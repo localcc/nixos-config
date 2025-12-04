@@ -8,19 +8,52 @@
   imports = [
     ./hardware-configuration.nix
     ./alsa.nix
-    ../../../common/nixos/gnome.nix
+    ../../../common/nixos/niri.nix
     inputs.chaotic.nixosModules.nyx-cache
     inputs.chaotic.nixosModules.nyx-overlay
     inputs.chaotic.nixosModules.nyx-registry
   ];
 
-  gnome.enable = true;
+  gdm.enable = true;
+  niri.enable = true;
 
   home-manager.users.kate = {
     imports = [
-      ../../../common/home/gnome.nix
+      ../../../common/home/niri.nix
     ];
-    gnome.enable = true;
+
+    niri = {
+      enable = true;
+      binds = {
+        "F6".action.screenshot = { };
+      };
+
+      touchpad = {
+        scroll-factor = 0.5;
+      };
+
+      outputs."DP-10" = {
+        mode = {
+          width = 2560;
+          height = 1440;
+          refresh = 143.981;
+        };
+
+        position = {
+          x = 0;
+          y = 0;
+        };
+
+        focus-at-startup = true;
+      };
+
+      outputs."eDP-1" = {
+        position = {
+          x = 450;
+          y = 1440;
+        };
+      };
+    };
 
     # do not remove
     home.stateVersion = "25.11";
@@ -30,19 +63,6 @@
     "/share/applications"
     "/share/xdg-desktop-portal"
   ];
-
-  # DE
-  # niri = {
-  #   enable = true;
-
-  #   settings = {
-  #     touchpad.scrollFactor = "0.5";
-
-  #     binds = ''
-  #       F6 { screenshot; }
-  #     '';
-  #   };
-  # };
 
   # Boot
   boot.secureboot.enable = true;
