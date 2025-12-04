@@ -78,6 +78,9 @@
     # do not remove
     home.stateVersion = "25.11";
   };
+  programs._1password-gui = {
+    polkitPolicyOwners = [ "kate" ];
+  };
 
   environment.pathsToLink = [
     "/share/applications"
