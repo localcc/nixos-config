@@ -42,6 +42,11 @@ in
         type = lib.types.attrsOf lib.types.anything;
         description = "Additional layout settings";
       };
+
+      debug = lib.mkOption {
+        type = lib.types.attrsOf lib.types.anything;
+        description = "Debug settings";
+      };
     };
   };
 
@@ -208,6 +213,7 @@ in
 
       animations = cfg.animations;
       outputs = cfg.outputs;
+      debug = cfg.debug;
 
       binds = {
         "Mod+Shift+Slash".action.show-hotkey-overlay = { };
@@ -262,6 +268,7 @@ in
           allow-when-locked = true;
           action.spawn = [
             "brightnessctl"
+            "--device=amdgpu_bl1"
             "--class=backlight"
             "set"
             "+10%"
@@ -271,6 +278,7 @@ in
           allow-when-locked = true;
           action.spawn = [
             "brightnessctl"
+            "--device=amdgpu_bl1"
             "--class=backlight"
             "set"
             "10%-"

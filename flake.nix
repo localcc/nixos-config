@@ -53,6 +53,11 @@
       url = "git+https://codeberg.org/LGFae/awww";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    supergfxctl = {
+      url = "github:/localcc/supergfxctl";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     inputs:

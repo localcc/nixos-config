@@ -4,6 +4,9 @@
   ...
 }:
 {
+  # Disable upstream supergfxd module so we can use our local one
+  disabledModules = [ "services/hardware/supergfxd.nix" ];
+
   imports = [
     # ./gnome.nix
     # ./niri.nix
@@ -15,6 +18,7 @@
     ./splash.nix
     ./secureboot.nix
     ./sound.nix
+    ./supergfxd.nix
   ];
 
   # boot
