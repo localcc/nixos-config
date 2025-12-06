@@ -229,6 +229,6 @@ in
         chmod u+w "${config.xdg.configHome}/ignis/user_settings.json"
       fi
     '';
-    home.activation.applyWallpaper = lib.hm.dag.entryAfter [ "linkGeneration" ] setWallpaper;
+    # home.activation.applyWallpaper = lib.hm.dag.entryAfter [ "linkGeneration" ] setWallpaper;
   };
 }

@@ -8,6 +8,7 @@
   imports = [
     ./hardware-configuration.nix
     ./alsa.nix
+    ./qemu.nix
     ../../../common/nixos/niri.nix
     inputs.chaotic.nixosModules.nyx-cache
     inputs.chaotic.nixosModules.nyx-overlay
@@ -24,6 +25,19 @@
       ../../../common/home/niri-exo.nix
     ];
 
+    programs.git = {
+      enable = true;
+      settings = {
+        user.name = "kate";
+        user.email = "work@localcc.cc";
+
+        user.signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEHWfBIxvY4c0Rdava/cAEa3qGUOxMSt4Cu0Ap7RtSK7";
+        gpg.format = "ssh";
+        gpg.ssh.program = "${pkgs._1password-gui}/bin/op-ssh-sign";
+        commit.gpgsign = true;
+      };
+    };
+
     home.packages = with pkgs; [
       slack
     ];
@@ -35,6 +49,11 @@
 
       binds = {
         "F6".action.screenshot = { };
+      };
+
+      debug = {
+        render-drm-device = "/dev/dri/renderD129";
+        ignore-drm-device = "/dev/dri/renderD128";
       };
 
       touchpad = {
@@ -92,33 +111,40 @@
   ];
 
   # Boot
-  boot.secureboot.enable = true;
+  # boot.secureboot.enable = true;
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_6_17;
 
   # Network bridge
   # networking.useDHCP = true;
-  # networking.bridges = {
-  #   br0 = {
-  #     interfaces = [ "enp103s0f3u1u2" ];
-  #   };
-  # };
-  # networking.interfaces.br0.ipv4.addresses = [
-  #   {
-  #     address = "10.0.0.2";
-  #     prefixLength = 24;
-  #   }
-  # ];
-  # networking.interfaces.br0.useDHCP = true;
-  # networking.interfaces.enp103s0f3u1u2.useDHCP = true;
+  networking.bridges = {
+    br0 = {
+      interfaces = [
+        "enp103s0f4u1u2"
+      ];
+    };
+  };
+  networking.interfaces.br0.ipv4.addresses = [
+    {
+      address = "10.0.0.2";
+      prefixLength = 24;
+    }
+  ];
+  networking.interfaces.br0.useDHCP = true;
+  networking.interfaces.enp103s0f4u1u2.useDHCP = true;
 
   # GPU
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver.videoDrivers = [
+    "modesetting"
+    "nvidia"
+  ];
 
   hardware.graphics.enable = true;
   hardware.graphics.extraPackages = [ pkgs.libva-vdpau-driver ];
   hardware.nvidia = {
-    modesetting.enable = true;
-    powerManagement.enable = false;
+    modesetting.enable = false;
+    powerManagement.enable = true;
     powerManagement.finegrained = false;
 
     # use nvidia opensource driver (not nouveau!!)
@@ -127,8 +153,10 @@
 
     prime = {
       offload = {
-        enable = true;
-        enableOffloadCmd = true;
+        # this doesnt work without modesetting
+        # and modesetting is incompatible with gpu hotplug
+        enable = false;
+        enableOffloadCmd = false;
       };
 
       amdgpuBusId = "PCI:101:0:0";
@@ -161,6 +189,14 @@
 
   environment.systemPackages = with pkgs; [
     nodejs_24
+    lsof
+    (pkgs.writeShellScriptBin "nvidia-offload" ''
+      export __NV_PRIME_RENDER_OFFLOAD=1
+      export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
+      export __GLX_VENDOR_LIBRARY_NAME=nvidia
+      export __VK_LAYER_NV_optimus=NVIDIA_only
+      exec "$@"
+    '')
   ];
 
   # Security
