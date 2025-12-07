@@ -33,7 +33,7 @@
       fsType = "btrfs";
     };
     "/boot" = {
-      device = "/dev/disk/by-uuid/E9A7-B96C";
+      device = "/dev/disk/by-uuid/3079-D48B";
       fsType = "vfat";
       options = [
         "fmask=0077"
@@ -50,7 +50,7 @@
   ];
 
   boot.initrd.luks.devices."cryptroot".device =
-    "/dev/disk/by-uuid/dad16ba6-edeb-4271-babf-d814b293326a";
+    "/dev/disk/by-uuid/c80fb4d8-6618-4877-99da-7fc1ce4b4b9c";
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
