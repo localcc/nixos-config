@@ -186,6 +186,7 @@
       enable = true;
       enableUserService = true;
     };
+    power-profiles-daemon.enable = true;
   };
 
   # Steam
