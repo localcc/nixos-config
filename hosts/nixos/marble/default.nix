@@ -68,6 +68,7 @@ in
 
       home.packages = with pkgs; [
         slack
+        virt-manager
       ];
 
       niri = {
