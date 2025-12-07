@@ -1,15 +1,37 @@
-{
+args@{
   inputs,
   config,
+  lib,
   pkgs,
   ...
 }:
+let
+  vmdir = "${config.users.users.kate.home}/vms";
+  isodir = "${vmdir}/isos";
+
+  win11-vmdir = "${vmdir}/win11";
+
+  vmdirs = [
+    isodir
+    win11-vmdir
+  ];
+in
 {
   imports = [
     ./hardware-configuration.nix
     ./alsa.nix
     ./qemu.nix
     ../../../common/nixos/niri.nix
+    (import ./vms/win11-vm.nix (
+      args
+      // {
+        inherit isodir;
+        vmdir = win11-vmdir;
+        video = "none";
+        gpu-passthrough = true;
+        installation = false;
+      }
+    ))
     inputs.chaotic.nixosModules.nyx-cache
     inputs.chaotic.nixosModules.nyx-overlay
     inputs.chaotic.nixosModules.nyx-registry
@@ -19,88 +41,94 @@
   niri.enable = true;
   niri.exo = true;
 
-  home-manager.users.kate = {
-    imports = [
-      ../../../common/home/niri.nix
-      ../../../common/home/niri-exo.nix
-    ];
+  home-manager.users.kate =
+    { lib, ... }:
+    {
+      imports = [
+        ../../../common/home/niri.nix
+        ../../../common/home/niri-exo.nix
+      ];
 
-    programs.git = {
-      enable = true;
-      settings = {
-        user.name = "kate";
-        user.email = "work@localcc.cc";
+      home.activation.vmdir = lib.hm.dag.entryAfter [ "writeBoundary" ] (
+        builtins.concatStringsSep "\n" (builtins.map (dir: "mkdir -p ${dir}") vmdirs)
+      );
 
-        user.signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEHWfBIxvY4c0Rdava/cAEa3qGUOxMSt4Cu0Ap7RtSK7";
-        gpg.format = "ssh";
-        gpg.ssh.program = "${pkgs._1password-gui}/bin/op-ssh-sign";
-        commit.gpgsign = true;
+      programs.git = {
+        enable = true;
+        settings = {
+          user.name = "kate";
+          user.email = "work@localcc.cc";
+
+          user.signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEHWfBIxvY4c0Rdava/cAEa3qGUOxMSt4Cu0Ap7RtSK7";
+          gpg.format = "ssh";
+          gpg.ssh.program = "${pkgs._1password-gui}/bin/op-ssh-sign";
+          commit.gpgsign = true;
+        };
       };
+
+      home.packages = with pkgs; [
+        slack
+      ];
+
+      niri = {
+        enable = true;
+        exo = true;
+        wallpaper = (inputs.self + /assets/wallpaper.webp);
+
+        binds = {
+          "F6".action.screenshot = { };
+        };
+
+        debug = {
+          render-drm-device = "/dev/dri/renderD129";
+          ignore-drm-device = "/dev/dri/renderD128";
+        };
+
+        touchpad = {
+          scroll-factor = 0.5;
+        };
+
+        outputs."DP-10" = {
+          mode = {
+            width = 2560;
+            height = 1440;
+            refresh = 143.981;
+          };
+
+          position = {
+            x = 0;
+            y = 0;
+          };
+
+          focus-at-startup = true;
+        };
+
+        outputs."DP-11" = {
+          mode = {
+            width = 2560;
+            height = 1440;
+            refresh = 143.981;
+          };
+
+          position = {
+            x = 0;
+            y = 0;
+          };
+
+          focus-at-startup = true;
+        };
+
+        outputs."eDP-1" = {
+          position = {
+            x = 450;
+            y = 1440;
+          };
+        };
+      };
+
+      # do not remove
+      home.stateVersion = "25.11";
     };
-
-    home.packages = with pkgs; [
-      slack
-    ];
-
-    niri = {
-      enable = true;
-      exo = true;
-      wallpaper = (inputs.self + /assets/wallpaper.webp);
-
-      binds = {
-        "F6".action.screenshot = { };
-      };
-
-      debug = {
-        render-drm-device = "/dev/dri/renderD129";
-        ignore-drm-device = "/dev/dri/renderD128";
-      };
-
-      touchpad = {
-        scroll-factor = 0.5;
-      };
-
-      outputs."DP-10" = {
-        mode = {
-          width = 2560;
-          height = 1440;
-          refresh = 143.981;
-        };
-
-        position = {
-          x = 0;
-          y = 0;
-        };
-
-        focus-at-startup = true;
-      };
-
-      outputs."DP-11" = {
-        mode = {
-          width = 2560;
-          height = 1440;
-          refresh = 143.981;
-        };
-
-        position = {
-          x = 0;
-          y = 0;
-        };
-
-        focus-at-startup = true;
-      };
-
-      outputs."eDP-1" = {
-        position = {
-          x = 450;
-          y = 1440;
-        };
-      };
-    };
-
-    # do not remove
-    home.stateVersion = "25.11";
-  };
   programs._1password-gui = {
     polkitPolicyOwners = [ "kate" ];
   };
@@ -120,9 +148,7 @@
   # networking.useDHCP = true;
   networking.bridges = {
     br0 = {
-      interfaces = [
-        "enp103s0f4u1u2"
-      ];
+      interfaces = [ ];
     };
   };
   networking.interfaces.br0.ipv4.addresses = [
@@ -132,7 +158,7 @@
     }
   ];
   networking.interfaces.br0.useDHCP = true;
-  networking.interfaces.enp103s0f4u1u2.useDHCP = true;
+  # networking.interfaces.enp103s0f4u1u2.useDHCP = true;
 
   # GPU
   services.xserver.videoDrivers = [
