@@ -1,23 +1,66 @@
 {
   pkgs,
   inputs,
+  config,
   ...
 }:
 let
-  bind_vfio = pkgs.writeShellScript "bind_vfio.sh" ''
-    ## Unbind gpu from nvidia and bind to vfio
-    ${pkgs.supergfxctl}/bin/supergfxctl -m Vfio
-    sleep 2
-  '';
-
-  unbind_vfio = pkgs.writeShellScript "unbind_vfio.sh" ''
-    ## Unbind gpu from vfio and bind to nvidia
-    ${pkgs.supergfxctl}/bin/supergfxctl -m NvidiaNoModeset
-    sleep 2
-  '';
-
+  nixvirt = inputs.NixVirt;
 in
 {
+  imports = [ inputs.NixVirt.nixosModules.default ];
+
+  boot.extraModulePackages = [ config.boot.kernelPackages.kvmfr ];
+  boot.kernelModules = [ "kvmfr" ];
+  boot.extraModprobeConfig = ''
+    options kvmfr static_size_mb=128
+  '';
+
+  services.udev.extraRules = ''
+    SUBSYSTEM=="kvmfr", GROUP="kvm", MODE="0660"
+  '';
+
+  environment.systemPackages = with pkgs; [
+    looking-glass-client
+  ];
+
+  virtualisation.libvirt = {
+    enable = true;
+    swtpm.enable = true;
+    connections."qemu:///session" = {
+      networks = [
+        {
+          definition = nixvirt.lib.network.writeXML {
+            name = "nat0";
+            uuid = "fc53e9f7-f190-4365-a78d-e1cd74b2e01b";
+            forward = {
+              mode = "nat";
+              nat = {
+                port.start = 1024;
+                port.end = 65535;
+              };
+            };
+            bridge = {
+              name = "virbr0";
+              stp = true;
+              delay = 0;
+            };
+            ip = {
+              address = "192.168.100.1";
+              netmask = "255.255.255.0";
+              dhcp = {
+                range.start = "192.168.100.128";
+                range.end = "192.168.100.254";
+              };
+            };
+          };
+          active = true;
+          restart = null;
+        }
+      ];
+    };
+  };
+
   virtualisation.libvirtd =
     with pkgs;
     let
@@ -29,17 +72,14 @@ in
       qemu = {
         package = unstable.qemu;
         swtpm.enable = true;
+        verbatimConfig = ''
+          cgroup_device_acl = [
+              "/dev/null", "/dev/full", "/dev/zero",
+              "/dev/random", "/dev/urandom",
+              "/dev/ptmx", "/dev/kvm",
+              "/dev/userfaultfd", "/dev/kvmfr0"
+          ]
+        '';
       };
     };
-
-  systemd.services.libvirtd = {
-    preStart = ''
-      mkdir -p /var/lib/libvirt/hooks
-      mkdir -p /var/lib/libvirt/hooks/qemu.d/win10/prepare/begin
-      mkdir -p /var/lib/libvirt/hooks/qemu.d/win10/release/end
-
-      ln -sf ${bind_vfio} /var/lib/libvirt/hooks/qemu.d/win10/prepare/begin/bind_vfio.sh
-      ln -sf ${unbind_vfio} /var/lib/libvirt/hooks/qemu.d/win10/release/end/unbind_vfio.sh
-    '';
-  };
 }
