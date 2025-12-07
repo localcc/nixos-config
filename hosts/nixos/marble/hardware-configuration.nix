@@ -20,6 +20,7 @@
     "sd_mod"
     "rtsx_pci_sdmmc"
   ];
+  boot.supportedFilesystems = [ "ntfs" ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.kernelParams = [
     "amd_iommu=on"

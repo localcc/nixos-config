@@ -19,6 +19,7 @@ in
   config = lib.mkMerge [
     (lib.mkIf cfg.enable {
       services.gnome.gnome-keyring.enable = true;
+      services.gvfs.enable = true;
       gdm.sessionPackages = [ pkgs.niri-unstable ];
     })
     (lib.mkIf cfg.exo {
