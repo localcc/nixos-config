@@ -179,6 +179,10 @@ in
               app-id = "org.telegram.desktop";
               title = "Media viewer";
             }
+            {
+              app-id = "steam";
+              title = "Steam Settings";
+            }
           ];
           open-floating = true;
         }
