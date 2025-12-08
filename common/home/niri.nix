@@ -108,6 +108,10 @@ in
           numlock = true;
         };
 
+        mouse = {
+          accel-speed = -0.5;
+        };
+
         touchpad = {
           dwt = true;
           tap = true;
