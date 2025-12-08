@@ -82,6 +82,7 @@
       # parsec-bin
       trayscale
       obsidian
+      pavucontrol
 
       (microsoft-edge.override {
         commandLineArgs = [
