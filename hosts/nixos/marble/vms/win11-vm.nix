@@ -577,6 +577,21 @@ in
               function = hex "0x0";
             };
           };
+          channel = [
+            {
+              type = "spicevmc";
+              target = {
+                type = "virtio";
+                name = "com.redhat.spice.0";
+              };
+              address = {
+                type = "virtio-serial";
+                controller = 0;
+                bus = 0;
+                port = 1;
+              };
+            }
+          ];
           audio = {
             id = 1;
             type = "none";
