@@ -10,6 +10,7 @@ let
   isodir = "${vmdir}/isos";
 
   win11-vmdir = "${vmdir}/win11";
+  win11-vmpart = "/dev/nvme0n1p3";
 
   vmdirs = [
     isodir
@@ -27,6 +28,7 @@ in
       // {
         inherit isodir;
         vmdir = win11-vmdir;
+        vmpart = win11-vmpart;
         video = "none";
         gpu-passthrough = true;
         installation = false;

@@ -2,6 +2,7 @@
   inputs,
   pkgs,
   vmdir,
+  vmpart,
   isodir,
   video,
   gpu-passthrough,
@@ -49,18 +50,17 @@ let
       19
     ]
     [
-      8
-      20
-    ]
-    [
       9
       21
     ]
+    [
+      11
+      23
+    ]
   ];
-  emulatorSet = "10,22";
-  ioThreadSet = "11,23";
+  emulatorSet = "10,22,8,20";
 
-  vmIsolatedThreads = "${emulatorSet},${ioThreadSet}";
+  vmIsolatedThreads = "${emulatorSet}";
   normalHostThreads = "0-23";
 
   vmGovernor = "performance";
@@ -308,7 +308,7 @@ in
         cpu = {
           mode = "host-passthrough";
           check = "none";
-          migratable = true;
+          migratable = false;
           topology = {
             sockets = 1;
             cores = builtins.length cpuTopology;
@@ -326,17 +326,12 @@ in
           placement = "static";
           count = builtins.length cpuTopology * builtins.length (builtins.head cpuTopology);
         };
-        iothreads.count = 1;
         cputune = {
           vcpupin = lib.lists.imap0 (index: cpu: {
             vcpu = index;
             cpuset = builtins.toString cpu;
           }) (lib.lists.flatten cpuTopology);
           emulatorpin.cpuset = emulatorSet;
-          iothreadpin = {
-            iothread = 1;
-            cpuset = ioThreadSet;
-          };
         };
         memory = {
           count = memSizeKib;
@@ -419,25 +414,25 @@ in
           emulator = "${pkgs.qemu}/bin/qemu-system-x86_64";
           disk = [
             {
-              type = "file";
+              type = "block";
               device = "disk";
               driver = {
                 name = "qemu";
-                type = "qcow2";
+                type = "raw";
                 cache = "none";
                 discard = "unmap";
-                io = "threads";
-                queues = 8;
+                detect-zeroes = "unmap";
+                io = "io_uring";
               };
-              source.file = "${vmdir}/win11.qcow2";
+              source.dev = vmpart;
               target = {
-                dev = "sda";
-                bus = "scsi";
+                dev = "vda";
+                bus = "virtio";
               };
               address = {
-                type = "drive";
+                type = "pci";
                 controller = 0;
-                bus = 0;
+                bus = hex "0x09";
                 target = 0;
                 unit = 0;
               };
