@@ -41,19 +41,19 @@ in
 
   gdm.enable = true;
   niri.enable = true;
-  niri.exo = true;
 
   environment.sessionVariables = {
     __EGL_VENDOR_LIBRARY_FILENAMES = "${pkgs.mesa}/share/glvnd/egl_vendor.d/50_mesa.json";
     __GLX_VENDOR_LIBRARY_NAME = "mesa";
   };
 
+  age.secrets.pfp.file = (inputs.secrets + /pfp.age);
   home-manager.users.kate =
     { lib, ... }:
     {
       imports = [
         ../../../common/home/niri.nix
-        ../../../common/home/niri-exo.nix
+        ../../../common/home/niri-noctalia.nix
       ];
 
       home.activation.vmdir = lib.hm.dag.entryAfter [ "writeBoundary" ] (
@@ -80,8 +80,10 @@ in
 
       niri = {
         enable = true;
-        exo = true;
-        wallpaper = (inputs.self + /assets/wallpaper.webp);
+        noctalia = true;
+        laptop = true;
+        wallpaper = (inputs.self + /assets/wallpaper.jpg);
+        pfp = config.age.secrets.pfp.path;
 
         binds = {
           "F6".action.screenshot = { };
@@ -167,6 +169,12 @@ in
   networking.interfaces.br0.useDHCP = true;
   # networking.interfaces.enp103s0f4u1u2.useDHCP = true;
 
+  # Bluetooth
+  hardware.bluetooth.enable = true;
+
+  # Battery
+  services.upower.enable = true;
+
   # GPU
   services.xserver.videoDrivers = [
     "modesetting"
@@ -229,6 +237,7 @@ in
   environment.systemPackages = with pkgs; [
     nodejs_24
     lsof
+    kdiskmark
     (pkgs.writeShellScriptBin "nvidia-offload" ''
       export __NV_PRIME_RENDER_OFFLOAD=1
       export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
