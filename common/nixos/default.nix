@@ -8,10 +8,8 @@
   disabledModules = [ "services/hardware/supergfxd.nix" ];
 
   imports = [
-    # ./gnome.nix
-    # ./niri.nix
-    # ./greetd.nix
-    # ./user.nix
+    ./gnome.nix
+    ./niri.nix
     ./gdm.nix
     ./localization.nix
     ./network.nix
