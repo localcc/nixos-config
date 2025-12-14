@@ -46,6 +46,11 @@
   programs._1password.enable = true;
   programs._1password-gui.enable = true;
   programs.localsend.enable = true;
+  programs.obs-studio = {
+    enable = true;
+    package = pkgs.obs-studio.override { cudaSupport = true; };
+  };
+
   environment.systemPackages =
     with pkgs;
     let
