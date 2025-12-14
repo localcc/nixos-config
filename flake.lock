@@ -751,11 +751,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1765043625,
-        "narHash": "sha256-NOmtgpoub5cC5zCOmGpux5Cj0DayZP1MCPlD3lTCwvg=",
+        "lastModified": 1765721152,
+        "narHash": "sha256-FOlarBP61DrHb2dsUm8gpX9R/PN5H1b0+PjyEj/0SD4=",
         "owner": "localcc",
         "repo": "supergfxctl",
-        "rev": "33867758bc7746f2ef9a0eb5a0084c09668c77aa",
+        "rev": "c0e4c6c25f915de957f8cb9e33ab4d4ca367fb64",
         "type": "github"
       },
       "original": {
