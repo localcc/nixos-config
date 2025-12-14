@@ -43,6 +43,11 @@ in
   niri.enable = true;
   niri.exo = true;
 
+  environment.sessionVariables = {
+    __EGL_VENDOR_LIBRARY_FILENAMES = "${pkgs.mesa}/share/glvnd/egl_vendor.d/50_mesa.json";
+    __GLX_VENDOR_LIBRARY_NAME = "mesa";
+  };
+
   home-manager.users.kate =
     { lib, ... }:
     {
@@ -83,8 +88,7 @@ in
         };
 
         debug = {
-          render-drm-device = "/dev/dri/renderD129";
-          ignore-drm-device = "/dev/dri/renderD128";
+          render-drm-device = "/dev/dri/renderD128";
         };
 
         touchpad = {
@@ -172,7 +176,7 @@ in
   hardware.graphics.enable = true;
   hardware.graphics.extraPackages = [ pkgs.libva-vdpau-driver ];
   hardware.nvidia = {
-    modesetting.enable = false;
+    modesetting.enable = true;
     powerManagement.enable = true;
     powerManagement.finegrained = false;
 
@@ -182,10 +186,8 @@ in
 
     prime = {
       offload = {
-        # this doesnt work without modesetting
-        # and modesetting is incompatible with gpu hotplug
-        enable = false;
-        enableOffloadCmd = false;
+        enable = true;
+        enableOffloadCmd = true;
       };
 
       amdgpuBusId = "PCI:101:0:0";
