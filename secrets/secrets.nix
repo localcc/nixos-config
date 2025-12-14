@@ -10,6 +10,7 @@ let
 in
 {
   "kate-password.age".publicKeys = all;
+  "pfp.age".publicKeys = all;
 
   # wifi
   "wifi-home.age".publicKeys = all;

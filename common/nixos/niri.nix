@@ -21,6 +21,7 @@ in
       services.gnome.gnome-keyring.enable = true;
       services.gvfs.enable = true;
       gdm.sessionPackages = [ pkgs.niri-unstable ];
+      programs.dconf.enable = true;
     })
     (lib.mkIf cfg.exo {
       security.pam.services.hyprlock = { };
