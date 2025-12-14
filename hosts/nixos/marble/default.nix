@@ -148,10 +148,17 @@ in
   ];
 
   # Boot
-  # boot.secureboot.enable = true;
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_cachyos;
+  boot.secureboot.enable = true;
+  boot.splash = {
+    enable = lib.mkDefault true;
+    themePackage = (
+      pkgs.adi1090x-plymouth-themes.override {
+        selected_themes = [ "pixels" ];
+      }
+    );
+    theme = "pixels";
+  };
 
   # Network bridge
   # networking.useDHCP = true;
