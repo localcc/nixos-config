@@ -47,7 +47,11 @@ in
     __GLX_VENDOR_LIBRARY_NAME = "mesa";
   };
 
-  age.secrets.pfp.file = (inputs.secrets + /pfp.age);
+  age.secrets.pfp = {
+    file = (inputs.secrets + /pfp.age);
+    owner = "kate";
+    mode = "600";
+  };
   home-manager.users.kate =
     { lib, ... }:
     {
