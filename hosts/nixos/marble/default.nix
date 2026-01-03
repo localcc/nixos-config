@@ -82,6 +82,7 @@ in
       home.packages = with pkgs; [
         slack
         virt-manager
+        inputs.colmena.packages.${system}.colmena
       ];
 
       niri = {

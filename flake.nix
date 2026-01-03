@@ -68,9 +68,24 @@
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    colmena = {
+      url = "github:zhaofengli/colmena";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    disko = {
+      url = "github:nix-community/disko/latest";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
-    inputs:
+    {
+      self,
+      nixpkgs,
+      colmena,
+      ...
+    }@inputs:
     let
       inherit (inputs.nixpkgs) lib;
 
@@ -102,6 +117,18 @@
           };
         };
 
+      mkColmenaHost = hostname: {
+        ${hostname} = {
+          imports = [
+            { config._module.args = { inherit hostname; }; }
+            ./hosts/nixos/${hostname}
+            ./hosts/nixos/${hostname}/colmena.nix
+            ./common
+            ./common/nixos
+          ];
+        };
+      };
+
       systems = builtins.attrNames (builtins.readDir ./hosts);
       hosts = builtins.concatMap (
         system:
@@ -110,6 +137,37 @@
         in
         map (hostname: mkHost system hostname) hostnames
       ) systems;
+
+      pkgsForSystem =
+        system:
+        import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+          overlays = [ ];
+        };
+
+      nixHosts = builtins.attrNames (builtins.readDir ./hosts/nixos);
+      colmenaSystems = builtins.filter (
+        hostname:
+        let
+          files = builtins.attrNames (builtins.readDir ./hosts/nixos/${hostname});
+        in
+        builtins.elem "colmena.nix" files
+      ) nixHosts;
+      colmenaHosts = map (hostname: mkColmenaHost hostname) colmenaSystems;
     in
-    builtins.foldl' lib.recursiveUpdate { } hosts;
+    {
+      colmenaHive = colmena.lib.makeHive self.outputs.colmena;
+
+      colmena = {
+        meta = {
+          nixpkgs = pkgsForSystem "x86_64-linux";
+          specialArgs = {
+            inherit inputs;
+          };
+        };
+      }
+      // builtins.foldl' lib.recursiveUpdate { } colmenaHosts;
+    }
+    // builtins.foldl' lib.recursiveUpdate { } hosts;
 }
