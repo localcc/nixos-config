@@ -41,6 +41,8 @@ in
 
   gdm.enable = true;
   niri.enable = true;
+  desktop.enable = true;
+  wifi.enable = true;
 
   environment.sessionVariables = {
     __EGL_VENDOR_LIBRARY_FILENAMES = "${pkgs.mesa}/share/glvnd/egl_vendor.d/50_mesa.json";
@@ -152,7 +154,7 @@ in
   ];
 
   # Boot
-  boot.kernelPackages = pkgs.linuxPackages_cachyos;
+  boot.kernelPackages = pkgs.linuxPackages_6_18;
   boot.secureboot.enable = true;
   boot.splash = {
     enable = lib.mkDefault true;
