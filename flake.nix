@@ -50,7 +50,7 @@
     };
 
     matugen = {
-      url = "github:/localcc/Matugen/fix-nix-module";
+      url = "github:/InioX/matugen/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
