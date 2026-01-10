@@ -627,6 +627,21 @@
         "type": "github"
       }
     },
+    "nixpkgs-fork": {
+      "locked": {
+        "lastModified": 1768068343,
+        "narHash": "sha256-TNzM48z7HMeQy4cV99nLTRMwUesQtyW0IxI5pH0sdfo=",
+        "ref": "refs/heads/unifi-statedir",
+        "rev": "10b271ad3659d702bb62256b2b483e83b67ce716",
+        "revCount": 4,
+        "type": "git",
+        "url": "file:///home/kate/dev/nixpkgs"
+      },
+      "original": {
+        "type": "git",
+        "url": "file:///home/kate/dev/nixpkgs"
+      }
+    },
     "nixpkgs-stable": {
       "locked": {
         "lastModified": 1767325753,
@@ -753,6 +768,7 @@
         "niri": "niri",
         "niri-unstable": "niri-unstable",
         "nixpkgs": "nixpkgs_3",
+        "nixpkgs-fork": "nixpkgs-fork",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "noctalia": "noctalia",
         "rust-overlay": "rust-overlay_5",

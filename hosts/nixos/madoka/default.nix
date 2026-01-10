@@ -22,6 +22,7 @@ in
   imports = [
     ./samba.nix
     ./podman.nix
+    ./services
     ./hardware-configuration.nix
   ];
 
@@ -46,6 +47,11 @@ in
   };
   fileSystems."/mnt/Storage/WitchHut" = {
     device = "Storage/WitchHut";
+    fsType = "zfs";
+    options = [ "zfsutil" ];
+  };
+  fileSystems."/mnt/Storage/Services" = {
+    device = "Storage/Services";
     fsType = "zfs";
     options = [ "zfsutil" ];
   };
