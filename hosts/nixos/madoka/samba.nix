@@ -63,6 +63,9 @@ in
         "guest account" = "nobody";
         "map to guest" = "bad user";
         "smb encrypt" = "required";
+        "follow symlinks" = "yes";
+        "wide links" = "yes";
+        "unix extensions" = "no";
       };
       "WitchHut" = {
         "path" = "/mnt/Storage/WitchHut";
