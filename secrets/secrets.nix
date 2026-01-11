@@ -29,4 +29,9 @@ in
 
   # tailscale
   "madoka-tailscale-key.age".publicKeys = [ kate madoka ];
+
+  # media-server
+  "mediaserver/gluetun.age".publicKeys = [ kate madoka ];
+  "mediaserver/tailscale.age".publicKeys = [ kate madoka ];
+  "mediaserver/caddy.age".publicKeys = [ kate madoka ];
 }
