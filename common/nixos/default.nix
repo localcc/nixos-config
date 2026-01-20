@@ -16,6 +16,7 @@
     ./desktop.nix
     ./containers.nix
     ./games.nix
+    ./embedded.nix
     inputs.blackwall.nixosModules.default
   ];
 

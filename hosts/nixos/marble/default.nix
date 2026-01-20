@@ -42,11 +42,17 @@ in
   desktop.enable = true;
   wifi.enable = true;
   games.enable = true;
+  embedded.enable = true;
 
   environment.sessionVariables = {
     __EGL_VENDOR_LIBRARY_FILENAMES = "${pkgs.mesa}/share/glvnd/egl_vendor.d/50_mesa.json";
     __GLX_VENDOR_LIBRARY_NAME = "mesa";
   };
+
+  users.users.kate.extraGroups = [
+    "plugdev"
+    "dialout"
+  ];
 
   age.secrets.pfp = {
     file = (inputs.secrets + /pfp.age);
