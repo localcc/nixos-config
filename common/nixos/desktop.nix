@@ -64,6 +64,10 @@ in
         jetbrains.idea
         jetbrains.webstorm
 
+        # ai
+        (inputs.kimi-code.packages.${pkgs.stdenv.system}.default)
+        opencode
+
         # gnu (ew)
         gnumake
         gcc15

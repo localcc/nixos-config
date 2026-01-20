@@ -103,6 +103,13 @@
       url = "github:nix-community/disko/latest";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    kimi-code = {
+      url = "github:MoonshotAI/kimi-code/main";
+    };
+    opencode = {
+      url = "github:anomalyco/opencode/dev";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     {

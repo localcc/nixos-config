@@ -10,6 +10,7 @@
     inputs.niri.overlays.niri
     inputs.proton-cachyos.overlays.default
     inputs.helium.overlays.default
+    inputs.opencode.overlays.default
   ];
 
   # auto gc
