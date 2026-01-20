@@ -57,7 +57,7 @@ lib.mkMerge [
             "qbittorrent"
             "tailscale"
           ];
-          network = "tailnet";
+          network."tailnet" = {};
         };
         "animlarr" = {
           image = "lscr.io/linuxserver/prowlarr:latest";
@@ -73,7 +73,7 @@ lib.mkMerge [
             "qbittorrent"
             "tailscale"
           ];
-          network = "tailnet";
+          network."tailnet" = {};
         };
         "caddy" = {
           image = "caddy:2-alpine";
@@ -88,7 +88,7 @@ lib.mkMerge [
           dependsOn = [
             "tailscale"
           ];
-          network = "container:tailscale";
+          network."container:tailscale" = {};
           extraOptions = [
             "--cap-add=NET_ADMIN"
           ];
@@ -108,7 +108,7 @@ lib.mkMerge [
           dependsOn = [
             "tailscale"
           ];
-          network = "container:tailscale";
+          network."container:tailscale" = {};
         };
         "flaresolverr" = {
           image = "ghcr.io/flaresolverr/flaresolverr:latest";
@@ -121,7 +121,7 @@ lib.mkMerge [
           dependsOn = [
             "tailscale"
           ];
-          network = "tailnet";
+          network."tailnet" = {};
         };
         "jackett" = {
           image = "lscr.io/linuxserver/jackett:latest";
@@ -137,7 +137,7 @@ lib.mkMerge [
             "qbittorrent"
             "tailscale"
           ];
-          network = "tailnet";
+          network."tailnet" = {};
         };
         "jellyfin" = {
           image = "lscr.io/linuxserver/jellyfin:latest";
@@ -161,7 +161,7 @@ lib.mkMerge [
             "qbittorrent"
             "tailscale"
           ];
-          network = "tailnet";
+          network."tailnet" = {};
           extraOptions = [
             "--device=/dev/dri/renderD128:/dev/dri/renderD128:rwm"
             "--group-add=107"
@@ -184,7 +184,7 @@ lib.mkMerge [
             "qbittorrent"
             "tailscale"
           ];
-          network = "tailnet";
+          network."tailnet" = {};
         };
         "prowlarr" = {
           image = "lscr.io/linuxserver/prowlarr:latest";
@@ -200,10 +200,11 @@ lib.mkMerge [
             "qbittorrent"
             "tailscale"
           ];
-          network = "tailnet";
+          network."tailnet" = {};
         };
         "qbittorrent" = {
           image = "lscr.io/linuxserver/qbittorrent:latest";
+          # image = "nginx";
           environment = {
             "DOCKER_MODS" = "ghcr.io/vuetorrent/vuetorrent-lsio-mod:latest";
             "PGID" = "0";
@@ -220,7 +221,7 @@ lib.mkMerge [
           dependsOn = [
             "GlueTun-VPN"
           ];
-          network = "container:GlueTun-VPN";
+          network."container:GlueTun-VPN" = {};
         };
         "radanimarr" = {
           image = "lscr.io/linuxserver/radarr:latest";
@@ -237,7 +238,7 @@ lib.mkMerge [
             "qbittorrent"
             "tailscale"
           ];
-          network = "tailnet";
+          network."tailnet" = {};
         };
         "radarr" = {
           image = "lscr.io/linuxserver/radarr:latest";
@@ -254,7 +255,7 @@ lib.mkMerge [
             "qbittorrent"
             "tailscale"
           ];
-          network = "tailnet";
+          network."tailnet" = {};
         };
         "sonarr" = {
           image = "lscr.io/linuxserver/sonarr:latest";
@@ -271,7 +272,7 @@ lib.mkMerge [
             "qbittorrent"
             "tailscale"
           ];
-          network = "tailnet";
+          network."tailnet" = {};
         };
         "tailscale" = {
           image = "ghcr.io/tailscale/tailscale:latest";
@@ -286,11 +287,12 @@ lib.mkMerge [
           volumes = [
             "${dataDir}/data/tailscale:/var/lib/tailscale:rw"
           ];
-          network = "tailnet";
+          network."tailnet" = {
+            ipv4-address = "172.20.0.2";
+          };          
           extraOptions = [
             "--cap-add=NET_ADMIN"
             "--device=/dev/net/tun:/dev/net/tun:rwm"
-            "--ip=172.20.0.2"
           ];
         };
       };
