@@ -53,52 +53,18 @@ in
         unstable = import inputs.nixpkgs-unstable { inherit system; };
       in
       [
-        # basic dev
-        gh
-        neovim
-        ripgrep
-        cmake
-        clang_20
-        ninja
-        python313
-        meson
-        unzip
-        jetbrains.idea
-        jetbrains.webstorm
-
-        # ai
-        (inputs.kimi-code.packages.${pkgs.stdenv.system}.default)
-        opencode
-
+        discord
+        trayscale
+        telegram-desktop
         # gnu (ew)
         gnumake
         gcc15
-
         # ps3 dev
         qemu-user
-
-        # rust dev
-        (rust-bin.stable."1.90.0".default.override {
-          extensions = [ "rust-analyzer" "rust-src" ];
-        })
-
-        # apps
-        unstable.telegram-desktop
-        unstable.zed-editor
-        discord
-        signal-desktop
-        mpv
-
-        # parsec-bin
-        trayscale
-        obsidian
 
         helium
         # guh drm
         microsoft-edge
-
-        # ios
-        libimobiledevice
       ];
 
     };
