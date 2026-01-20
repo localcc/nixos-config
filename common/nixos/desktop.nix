@@ -25,6 +25,8 @@ in
       enable = true;
       gui.enable = true;
     };
+    
+    services.usbmuxd.enable = true;
 
     services.logind.settings.Login.HandleLidSwitch = "suspend";
 
@@ -94,6 +96,9 @@ in
         helium
         # guh drm
         microsoft-edge
+
+        # ios
+        libimobiledevice
       ];
 
     };
