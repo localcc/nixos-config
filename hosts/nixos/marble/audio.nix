@@ -22,6 +22,14 @@ in
   home.packages = with pkgs; [
     (jackWrap carla)
   ];
+  home.file.".config/pipewire/pipewire.conf.d/realtime.conf" = {
+    text = ''
+      module.rt.args = {
+        nice.level = -19
+        rt.prio = 99
+      }
+    '';
+  };
 
   home.file.".config/pipewire/pipewire.conf.d/replay-setup.conf" = {
     text = ''
