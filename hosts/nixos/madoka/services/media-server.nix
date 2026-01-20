@@ -128,6 +128,7 @@ lib.mkMerge [
           image = "localhost/rawr:latest";
           environment = {
             "RAWR_SECRETS_FILE" = "/rawr-secrets.json";
+            "RAWR_DOMAIN" = "http://rawr.madoka";
             "TZ" = timeZone;
           };
           volumes = [
