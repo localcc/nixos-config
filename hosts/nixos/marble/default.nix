@@ -60,6 +60,7 @@ in
       imports = [
         ../../../common/home/niri.nix
         ../../../common/home/niri-noctalia.nix
+        ../../../common/home/jj.nix
         ../../../common/home/helix.nix
       ];
 
@@ -67,19 +68,7 @@ in
         builtins.concatStringsSep "\n" (builtins.map (dir: "mkdir -p ${dir}") vmdirs)
       );
 
-      programs.git = {
-        enable = true;
-        settings = {
-          user.name = "kate";
-          user.email = "work@localcc.cc";
-
-          user.signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEHWfBIxvY4c0Rdava/cAEa3qGUOxMSt4Cu0Ap7RtSK7";
-          gpg.format = "ssh";
-          gpg.ssh.program = "${pkgs._1password-gui}/bin/op-ssh-sign";
-          commit.gpgsign = true;
-        };
-      };
-
+      jj.enable = true;
       helix.enable = true;
       home.packages = with pkgs; [
         slack
