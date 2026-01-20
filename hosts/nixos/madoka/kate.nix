@@ -1,21 +1,8 @@
 {
   pkgs,
-  lib,
-  config,
-  inputs,
   ...
 }:
 {
-  imports = [
-    inputs.home-manager.nixosModules.home-manager
-    {
-      home-manager.extraSpecialArgs = { inherit inputs; };
-      home-manager.useGlobalPkgs = true;
-      home-manager.useUserPackages = true;
-      home-manager.backupFileExtension = "bak";
-    }
-  ];
-
   home-manager.users.kate = { lib, ... }: {
     imports = [
       ../../../common/home
@@ -34,7 +21,15 @@
         path = "/home/kate/dev";
         devices = [ "kate_marble" "cider" ];
       };
+      "opencode" = {
+        path = "/home/kate/.local/share/opencode";
+        devices = [ "kate_marble" ];
+      };
     };
+
+    home.packages = with pkgs; [
+      opencode
+    ];
 
     helix.enable = true;
     # do not remove
