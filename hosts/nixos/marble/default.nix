@@ -125,7 +125,7 @@ in
       jj.enable = true;
       helix.enable = true;
       home.packages = with pkgs; [
-        devenv
+        unstable.devenv
         slack
         virt-manager
         inputs.colmena.packages.${system}.colmena
