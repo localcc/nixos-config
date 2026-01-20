@@ -17,7 +17,7 @@ in
   config = lib.mkMerge [
     (lib.mkIf wifi.enable {
       # wifi
-      age.secrets.wifi-home.file = (inputs.self + /secrets/wifi-home.age);
+      age.secrets.wifi-home.file = (inputs.secrets + /wifi-home.age);
       networking.networkmanager.ensureProfiles = {
         environmentFiles = [
           config.age.secrets.wifi-home.path
