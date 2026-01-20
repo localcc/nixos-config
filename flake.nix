@@ -160,7 +160,11 @@
 
       hostList = builtins.concatMap (
         system:
-        map (host: { inherit system host; }) (builtins.attrNames (builtins.readDir ./hosts/${system}))
+        map (host: { inherit system host; }) (
+          builtins.filter (h: !lib.pathExists ./hosts/${system}/${h}/.not-a-host) (
+            builtins.attrNames (builtins.readDir ./hosts/${system})
+          )
+        )
       ) systems;
 
       mkHost =
