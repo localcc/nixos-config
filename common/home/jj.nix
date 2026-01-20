@@ -16,6 +16,10 @@ in
 
   config = lib.mkIf cfg.enable {
 
+    home.packages = with pkgs; [
+      difftastic
+    ];
+
     programs.jujutsu = {
       enable = true;
       # package = pkgs.custom.jujutsu;
@@ -43,16 +47,16 @@ in
             "--reversed"
             "--no-pager"
           ];
-          merge-editor = [
-            "${pkgs.meld}/bin/meld"
-            "$left"
-            "$base"
-            "$right"
-            "-o"
-            "$output"
-            "--auto-merge"
-          ];
-          # diff-editor = "${pkgs.meld}/bin/meld";
+          # merge-editor = [
+          #   "${pkgs.meld}/bin/meld"
+          #   "$left"
+          #   "$base"
+          #   "$right"
+          #   "-o"
+          #   "$output"
+          #   "--auto-merge"
+          # ];
+          # # diff-editor = "${pkgs.meld}/bin/meld";
         };
 
         fsmonitor.backend = "watchman";
