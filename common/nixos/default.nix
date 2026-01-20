@@ -8,6 +8,7 @@
   disabledModules = [ "services/desktops/flatpak.nix" ];
 
   imports = [
+    ./xmachine.nix
     ./gnome.nix
     ./niri.nix
     ./gdm.nix

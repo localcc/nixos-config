@@ -169,6 +169,7 @@ in
     { lib, ... }:
     {
       imports = [
+        ../../../common/home
         ../../../common/home/desktop.nix
         ../../../common/home/jj.nix
         ../../../common/home/git.nix

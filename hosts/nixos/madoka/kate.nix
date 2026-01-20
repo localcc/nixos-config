@@ -18,6 +18,7 @@
 
   home-manager.users.kate = { lib, ... }: {
     imports = [
+      ../../../common/home
       ../../../common/home/atuin.nix
       ../../../common/home/zellij.nix
       ../../../common/home/helix.nix
