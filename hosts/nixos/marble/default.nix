@@ -253,6 +253,7 @@ in
   ];
 
   # Boot
+  boot.kernel.sysctl."fs.inotify.max_user_watches" = 2097152;
   boot.kernelPackages = pkgs.linuxPackages_zen;
   boot.secureboot.enable = true;
   boot.splash = {
