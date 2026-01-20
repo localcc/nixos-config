@@ -1,5 +1,4 @@
 {
-  config,
   ...
 }:
 {
@@ -11,6 +10,7 @@
     ./pocket-id.nix
     ./immich.nix
     ./forgejo.nix
+    ./oauth2-proxy
   ];
 
   # Runtime

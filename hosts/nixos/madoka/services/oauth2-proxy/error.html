@@ -1,0 +1,84 @@
+{{define "error.html"}}
+<!DOCTYPE html>
+<html lang="en" charset="utf-8">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>{{.StatusCode}} {{.Title}}</title>
+
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    let cardToggles = document.getElementsByClassName('card-toggle');
+    for (let i = 0; i < cardToggles.length; i++) {
+      cardToggles[i].addEventListener('click', e => {
+        e.currentTarget.parentElement.parentElement.childNodes[3].classList.toggle('is-hidden');
+      });
+    }
+  });
+</script>
+
+<style>
+  .bg-card {
+    background-color: oklch(20.5% 0 0);
+  }
+
+  .text-card-foreground {
+    color: oklch(98.5% 0 0);
+  }
+
+  .bg-primary {
+    background-color: oklch(92.2% 0 0);
+  }
+
+  .text-primary-foreground {
+    color: oklch(20.5% 0 0);
+  }
+
+  .text-muted-foreground {
+    color: oklch(70.8% 0 0);
+  }
+</style>
+</head>
+<div class="flex h-screen items-center justify-center text-center">
+<div class="bg-card text-card-foreground flex flex-col justify-items-center items-center gap-6 rounded-xl border py-6 shadow-sm mx-3 w-full max-w-md">
+  <div class="text-bold text-8xl">{{.StatusCode}}</div>
+  <div class="text-2xl text-bold">{{.Title}}</div>
+
+  {{ if or .Message .RequestID }}
+  <div id="more-info" class="flex flex-col flex-1 bg-neutral-800 rounded-xl mx-2 px-2 py-1 text-left">
+    <p class="justify-self center text-lg pb-2">More Info</p>
+    {{ if .Message }}
+    <div class="content">
+      {{.Message}}
+    </div>
+    {{ end }}
+    {{ if .RequestID }}
+    <div class="content">
+      Request ID: {{.RequestID}}
+    </div>
+    {{ end }}
+  </div>
+  {{ end }}
+
+  {{ if .Redirect }}
+  <hr>
+
+  <div class="flex flex-row justify-between flex-1 w-[60%] items-center">
+    <form method="GET" action="{{.Redirect}}">
+      <button type="submit" class="text-xs text-muted-foreground">Go back</button>
+    </form>
+    <form method="GET" action="{{.ProxyPrefix}}/sign_in">
+      <input type="hidden" name="rd" value="{{.Redirect}}">
+      <button type="submit" class="rounded-md text-sm font-medium outline-none bg-primary text-primary-foreground shadow-xs h-10 px-4 py-2">Sign in</button>
+    </form>
+  </div>
+  {{ end }}
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+</body>
+</html>
+{{end}}
