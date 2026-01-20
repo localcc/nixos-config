@@ -1,5 +1,8 @@
 {
-  inputs, hostname, pkgs, ...
+  inputs,
+  hostname,
+  pkgs,
+  ...
 }:
 {
   imports = [
@@ -10,7 +13,10 @@
 
   # allow unfree
   nixpkgs.config.allowUnfree = true;
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   # age
   environment.systemPackages = [
