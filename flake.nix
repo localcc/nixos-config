@@ -13,6 +13,10 @@
       url = "github:localcc/gpu-switcher";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    gamescope-launcher = {
+      url = "github:localcc/gamescope-launcher";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nsight-graphics = {
       url = "github:localcc/nsight-graphics-nix";
       inputs.nixpkgs.follows = "nixpkgs";

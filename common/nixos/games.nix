@@ -23,18 +23,24 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    environment.systemPackages = with pkgs; [
+      protonup-ng
+      inputs.gamescope-launcher.packages.${system}.default
+    ];
+
     # Steam
     programs.steam = {
       enable = true;
       localNetworkGameTransfers.openFirewall = true;
       # package = unstable.steam;
-      # gamescopeSession.enable = true;
-      package = unstable.steam.override {
-        extraPkgs = pkgs: [
-          pkgs.gamescope
-        ];
-      };
+      gamescopeSession.enable = true;
+      # package = unstable.steam.override {
+      #   extraPkgs = pkgs: [
+      #     pkgs.gamescope
+      #   ];
+      # };
     };
+    programs.gamemode.enable = true;
     # programs.gamescope = {
     #   enable = true;
     #   package = unstable.gamescope;
@@ -48,6 +54,10 @@ in
           nice = -20;
         }
       ];
+    };
+
+    environment.sessionVariables = {
+      STEAM_EXTRA_COMPAT_TOOLS_PATHS = "\${HOME}/.steam/root/compatibilitytools.d";
     };
   };
 }
