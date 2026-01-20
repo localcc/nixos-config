@@ -84,6 +84,10 @@ in
       ipv6.method = "auto";
     };
   };
+
+  environment.systemPackages = with pkgs; [
+    helix
+  ];
     
   # Security
   security.polkit.enable = true;

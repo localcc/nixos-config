@@ -60,6 +60,7 @@ in
       imports = [
         ../../../common/home/niri.nix
         ../../../common/home/niri-noctalia.nix
+        ../../../common/home/helix.nix
       ];
 
       home.activation.vmdir = lib.hm.dag.entryAfter [ "writeBoundary" ] (
@@ -79,6 +80,7 @@ in
         };
       };
 
+      helix.enable = true;
       home.packages = with pkgs; [
         slack
         virt-manager

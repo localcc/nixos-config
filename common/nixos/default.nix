@@ -41,7 +41,6 @@
     [
       # basic dev
       git
-      helix
       
       # shell
       wget
