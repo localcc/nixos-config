@@ -117,13 +117,23 @@ in
   blackwall.rules.ssh = {
     type = "input";
     # from = [ "local" ];
-    destinationPorts = [ { port = 22; type = "tcp"; } ];
+    destinationPorts = [
+      {
+        port = 22;
+        type = "tcp";
+      }
+    ];
     verdict = "accept";
   };
   blackwall.rules.podman-to-local = {
     type = "input";
     from = [ "podman" ];
-    destinationPorts = [ { port = 5000; type = "tcp"; } ];
+    destinationPorts = [
+      {
+        port = 5000;
+        type = "tcp";
+      }
+    ];
     verdict = "accept";
   };
 

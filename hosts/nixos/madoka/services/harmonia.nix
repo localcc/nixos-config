@@ -47,6 +47,7 @@ in
       nix
       openssh
       jq
+      curl
     ];
     script = ''
       NTFY_KEY=$(cat ${config.age.secrets.madoka-cache-fetcher-ntfy.path})

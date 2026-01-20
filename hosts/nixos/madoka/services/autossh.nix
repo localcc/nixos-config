@@ -21,7 +21,7 @@ in
 
   services.autossh-ng.sessions = {
     pf-portfwd = {
-      destination = "kate@minecraft.localcc.cc";
+      destination = "kate@cache.madoka.dev";
       extraArguments = lib.strings.concatStringsSep " " (
         pfArgs ++ [ "-i ${config.age.secrets.madoka-autossh.path}" ]
       );
