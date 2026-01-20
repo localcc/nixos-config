@@ -295,7 +295,6 @@ in
   ];
 
   hardware.graphics.enable = true;
-  hardware.graphics.extraPackages = [ pkgs.libva-vdpau-driver ];
   hardware.opengl.enable = true;
   hardware.graphics.extraPackages = [
     pkgs.libva-vdpau-driver
@@ -347,6 +346,7 @@ in
 
 
   environment.systemPackages = with pkgs; [
+    efibootmgr
     gsettings-desktop-schemas
     inputs.nsight-graphics.packages.${system}.default
     nodejs_24
