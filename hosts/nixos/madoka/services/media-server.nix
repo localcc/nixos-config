@@ -13,24 +13,6 @@ let
 in
 lib.mkMerge [
   {
-    # Runtime
-    virtualisation.podman = {
-      enable = true;
-      autoPrune.enable = true;
-      dockerCompat = true;
-    };
-
-    # Enable container name DNS for all Podman networks.
-    networking.firewall.interfaces =
-      let
-        matchAll = if !config.networking.nftables.enable then "podman+" else "podman*";
-      in
-      {
-        "${matchAll}".allowedUDPPorts = [ 53 ];
-      };
-
-    virtualisation.oci-containers.backend = "podman";
-
     age.secrets.madoka-mediaserver-caddy.file = (inputs.self + /secrets/mediaserver/caddy.age);
     age.secrets.madoka-mediaserver-gluetun.file = (inputs.self + /secrets/mediaserver/gluetun.age);
     age.secrets.madoka-mediaserver-tailscale.file = (inputs.self + /secrets/mediaserver/tailscale.age);
@@ -310,15 +292,6 @@ lib.mkMerge [
             "--device=/dev/net/tun:/dev/net/tun:rwm"
             "--ip=172.20.0.2"
           ];
-        };
-      };
-    };
-
-    compose.networks = {
-      "tailnet" = {
-        ipam = {
-          subnet = "172.20.0.0/24";
-          gateway = "172.20.0.1";
         };
       };
     };
