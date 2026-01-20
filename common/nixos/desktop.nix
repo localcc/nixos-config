@@ -9,6 +9,10 @@ let
   cfg = config.desktop;
 in
 {
+  imports = [
+    inputs.superluminal.nixosModules.default
+  ];
+  
   options = {
     desktop = {
       enable = lib.mkEnableOption "Desktop Deployment";
@@ -46,6 +50,8 @@ in
 
     fonts.fontDir.enable = true;
     services.flatpak.enable = true;
+
+    programs.superluminal.enable = true;
 
     environment.systemPackages =
       with pkgs;

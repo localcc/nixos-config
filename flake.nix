@@ -20,15 +20,18 @@
     };
     ghelper = {
       # url = "github:utajum/g-helper-linux?dir=nixos";
-      url = "github:localcc/g-helper-linux/fix-nix-build?dir=nixos";
+      url = "github:localcc/g-helper-linux/nix-ci?dir=nixos";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     sing = {
+      # url = "git+file:///home/kate/dev/nix-sing";
       url = "github:localcc/nix-sing";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     secrets = {
       url = "git+ssh://forgejo@ssh-git.madoka.dev:2222/localcc/nixos-config-secrets.git";
+      # url = "git+file:///home/kate/dev/nixos-config-secrets";
+      # url = "git+file:///Users/kate/dev/nixos-config-secrets";
       flake = false;
     };
     helium = {
@@ -36,7 +39,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     ddns-client = {
-      url = "github:localcc/ddns-client/nix-module";
+      url = "github:uwu/ddns-client";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -54,6 +57,10 @@
     };
     nsight-graphics = {
       url = "github:localcc/nsight-graphics-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    superluminal = {
+      url = "github:localcc/superluminal-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     agenix = {
