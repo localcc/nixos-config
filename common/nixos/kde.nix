@@ -36,6 +36,9 @@ let
   };
 in
 {
+  imports = [ "${inputs.nixpkgs-master}/nixos/modules/services/desktop-managers/plasma6.nix" ];
+  disabledModules = [ "services/desktop-managers/plasma6.nix" ];
+
   options = {
     kde = {
       enable = lib.mkEnableOption "KDE";
