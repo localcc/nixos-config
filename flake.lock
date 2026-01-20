@@ -474,11 +474,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1791637723,
-        "narHash": "sha256-rYsl+pB/NWvYTkXS/pEMQNVw5yvrt7Bjp2Q4uzd1Ia8=",
+        "lastModified": 1793555761,
+        "narHash": "sha256-HcpORArdRXlCf7Hj7/7xNJce++gw8kyUcgeK+UNZErc=",
         "ref": "refs/heads/main",
-        "rev": "984071418527cd504947ba5de61ac859dd2930f7",
-        "revCount": 2,
+        "rev": "ffbf133765dd45b55c64f154f0f825c9fa0c73c8",
+        "revCount": 3,
         "type": "git",
         "url": "ssh://forgejo@ssh-git.madoka.dev:2222/localcc/hrt-scraper.git"
       },
@@ -838,11 +838,11 @@
     },
     "nixpkgs-master": {
       "locked": {
-        "lastModified": 1792102401,
-        "narHash": "sha256-63O+rrVJZ/94kwUJPQPjJeoBtxjSGz2NRsWd2OV6Qds=",
+        "lastModified": 1792105769,
+        "narHash": "sha256-e9qOF8ZpM/0kPSeS0MCsVBjFmDEwzjzieMd1t+W7Amc=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "d22208f9477b7d7f3ac26ca13db7e6585eb47c31",
+        "rev": "e78e82ac171756c699b9745e4a6b7abe5a8dcbae",
         "type": "github"
       },
       "original": {
@@ -886,11 +886,11 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1791966044,
-        "narHash": "sha256-t1hT8UW97rFCWCJO7/pClvu0AhLN5V3uir2M0ic4w/Q=",
+        "lastModified": 1793977579,
+        "narHash": "sha256-WrSODdZFVIs/Hh2NzC0bY+ROByi0bATg8WfePX8dPj8=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "319e4cebef10cbb636c6ea392137b52ad105336a",
+        "rev": "4fe25e12eb9f4c744966dd3de5a05246cf098601",
         "type": "github"
       },
       "original": {
@@ -950,11 +950,11 @@
     },
     "nixpkgs_5": {
       "locked": {
-        "lastModified": 1791966044,
-        "narHash": "sha256-t1hT8UW97rFCWCJO7/pClvu0AhLN5V3uir2M0ic4w/Q=",
+        "lastModified": 1792116957,
+        "narHash": "sha256-EjZqHKObBfIOeHZnMRVV87HB3pPq/WBkmRJWyFxmZu8=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "319e4cebef10cbb636c6ea392137b52ad105336a",
+        "rev": "f20cd90e28fe0403873f473b29e42662cd86e8c4",
         "type": "github"
       },
       "original": {
@@ -1101,14 +1101,15 @@
       "locked": {
         "lastModified": 1780088951,
         "narHash": "sha256-QW1wEZ80LXdw1dkP3ttMWKEzBatfQeX/xGhEEFLJHpw=",
+        "ref": "refs/heads/main",
         "rev": "323cabfb006aabfdf7f25e3864b08cd56d912ba9",
         "revCount": 3,
         "type": "git",
-        "url": "file:///home/kate/dev/nixos-private-services"
+        "url": "ssh://forgejo@ssh-git.madoka.dev:2222/localcc/nixos-private-services.git"
       },
       "original": {
         "type": "git",
-        "url": "file:///home/kate/dev/nixos-private-services"
+        "url": "ssh://forgejo@ssh-git.madoka.dev:2222/localcc/nixos-private-services.git"
       }
     },
     "proton-cachyos": {

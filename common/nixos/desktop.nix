@@ -61,7 +61,7 @@ in
       [
         discord
         trayscale
-        telegram-desktop
+        unstable.telegram-desktop
         # gnu (ew)
         gnumake
         gcc15
