@@ -1,7 +1,11 @@
 {
   inputs,
+  pkgs,
   ...
 }:
+let
+  unstable = import inputs.nixpkgs-unstable { system = pkgs.stdenv.system; config.allowUnfree = true; };
+in
 {
   disabledModules = [
     "services/networking/unifi.nix"
@@ -12,6 +16,7 @@
   ];
 
   services.unifi = {
+    unifiPackage = unstable.unifi;
     enable = true;
     openFirewall = true;
     dataDir = "/mnt/Storage/Services/unifi";
