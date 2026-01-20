@@ -85,8 +85,8 @@ in
     "dialout"
   ];
 
-  networking.firewall.enable = true;
-  blackwall.enable = false;
+  networking.firewall.enable = false;
+  blackwall.enable = true;
   blackwall.hooks = {
     input = {
       priority = "filter + 1";
@@ -121,6 +121,32 @@ in
     destinationPorts = [
       {
         port = 1562;
+        type = "tcp";
+      }
+    ];
+    verdict = "accept";
+  };
+  blackwall.rules.satisfactory = {
+    from = [ "uplink" ];
+    destinationPorts = [
+      {
+        port = 7777;
+        type = "tcp";
+      }
+      {
+        port = 7777;
+        type = "udp";
+      }
+      {
+        port = 8888;
+        type = "tcp";
+      }
+      {
+        port = 8888;
+        type = "udp";
+      }
+      {
+        port = 3000;
         type = "tcp";
       }
     ];
