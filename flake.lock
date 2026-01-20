@@ -350,11 +350,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1770726752,
-        "narHash": "sha256-p0DsIPKQ3zQBCTc022wO71uxSXDbmS9aoKvjXZ9SsQ8=",
+        "lastModified": 1773878715,
+        "narHash": "sha256-GxfuxbYQO/5WfGET+tW6M8Lifxh0orFrKEzo9MIiN80=",
         "owner": "localcc",
         "repo": "gpu-switcher",
-        "rev": "cb45bc4ce653df239dcfa2aa441671245adffaae",
+        "rev": "9b2e96894ef3e0add79ab79b67f7809b90421406",
         "type": "github"
       },
       "original": {
