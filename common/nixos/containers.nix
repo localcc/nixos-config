@@ -18,16 +18,24 @@ let
         ;
     }).options.virtualisation.oci-containers.containers.type;
 
-  containerOptions =
-    with lib;
-    {
-      options = {
-        network = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-        };
+  containerNetworkOptions = with lib; {
+    options = {
+      ipv4-address = mkOption {
+        type = types.nullOr types.str;
+        description = "ipv4 address within the network";
+        default = null;
       };
     };
+  };
+
+  containerOptions = with lib; {
+    options = {
+      network = mkOption {
+        type = types.attrsOf (types.submodule containerNetworkOptions);
+        default = {};
+      };
+    };
+  };
 
   ipamOptions = with lib; {
     options = {
@@ -87,7 +95,19 @@ in
                 "network"
                 "serviceName"
               ];
-              isContainerNetwork = value.network != null && (lib.strings.hasPrefix "container:" value.network);
+              containerNetwork = lib.findFirst (net: lib.strings.hasPrefix "container" net) null (
+                builtins.attrNames value.network
+              );
+              hasContainerNetwork = containerNetwork != null;
+              networks = lib.attrValues (
+                lib.mapAttrs (
+                  name: value:
+                  let
+                    networkOptions = if value.ipv4-address != null then ":ip=${value.ipv4-address}" else "";
+                  in
+                  "--network=${name}${networkOptions}"
+                ) value.network
+              );
             in
             {
               inherit name;
@@ -97,12 +117,10 @@ in
                   serviceName = "podman-${stackName}-${name}";
                   log-driver = "journald";
                 }
-                (lib.mkIf (value.network != null) {
-                  extraOptions = [
-                    "--network=${value.network}"
-                  ];
-                })
-                (lib.mkIf (!isContainerNetwork) {
+                {
+                  extraOptions = networks;
+                }
+                (lib.mkIf (!hasContainerNetwork) {
                   extraOptions = [
                     "--network-alias=${stackName}-${name}"
                   ];
@@ -114,7 +132,13 @@ in
           systemd.services = mapContainer (
             stackName: name: value:
             let
-              isContainerNetwork = value.network != null && (lib.strings.hasPrefix "container:" value.network);
+              containerNetwork = lib.findFirst (net: lib.strings.hasPrefix "container" net) null (
+                builtins.attrNames value.network
+              );
+              hasContainerNetwork = containerNetwork != null;
+              dependentNetworks = lib.map (name: "podman-network-${name}.service") (
+                builtins.attrNames value.network
+              );
             in
             {
               name = "podman-${stackName}-${name}";
@@ -130,13 +154,9 @@ in
                     "podman-compose-${stackName}-root.target"
                   ];
                 }
-                (lib.mkIf (!isContainerNetwork && value.network != null) {
-                  after = [
-                    "podman-network-${value.network}.service"
-                  ];
-                  requires = [
-                    "podman-network-${value.network}.service"
-                  ];
+                (lib.mkIf (!hasContainerNetwork && value.network != null) {
+                  after = dependentNetworks;
+                  requires = dependentNetworks;
                 })
               ];
             }
