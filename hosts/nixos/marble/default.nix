@@ -62,6 +62,7 @@ in
         ../../../common/home/niri-noctalia.nix
         ../../../common/home/jj.nix
         ../../../common/home/helix.nix
+        ../../../common/home/games.nix
       ];
 
       home.activation.vmdir = lib.hm.dag.entryAfter [ "writeBoundary" ] (
