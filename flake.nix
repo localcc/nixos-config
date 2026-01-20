@@ -5,6 +5,7 @@
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-fork.url = "github:localcc/nixpkgs/unifi-datadir";
+    nixpkgs-graalvm.url = "github:localcc/nixpkgs/graalvm";
     blackwall.url = "github:localcc/blackwall";
 
     sing = {
