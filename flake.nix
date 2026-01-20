@@ -153,7 +153,11 @@
         let
           builder =
             if system == "darwin" then inputs.nix-darwin.lib.darwinSystem else inputs.nixpkgs.lib.nixosSystem;
-          homeManager = if system == "darwin" then inputs.home-manager.darwinModules.home-manager else inputs.home-manager.nixosModules.home-manager;
+          homeManager =
+            if system == "darwin" then
+              inputs.home-manager.darwinModules.home-manager
+            else
+              inputs.home-manager.nixosModules.home-manager;
           config = builder {
             specialArgs = { inherit inputs hostList; };
             modules = [
@@ -186,6 +190,13 @@
             ./hosts/nixos/${hostname}/colmena.nix
             ./common
             ./common/nixos
+            inputs.home-manager.nixosModules.home-manager
+            {
+              home-manager.extraSpecialArgs = { inherit inputs hostname; };
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "bak";
+            }
           ];
         };
       };
@@ -193,7 +204,9 @@
       hosts = builtins.concatMap (
         system:
         let
-          hostnames = builtins.attrNames (builtins.readDir ./hosts/${system});
+          hostnames = builtins.filter (h: !lib.pathExists ./hosts/${system}/${h}/.not-a-host) (
+            builtins.attrNames (builtins.readDir ./hosts/${system})
+          );
         in
         map (hostname: mkHost system hostname) hostnames
       ) systems;
