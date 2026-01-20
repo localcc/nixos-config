@@ -13,6 +13,10 @@ http://jellyfin.madoka {
     reverse_proxy jellyfin:8096
 }
 
+http://rawr.madoka {
+	reverse_proxy rawr
+}
+
 (mediaserverAuth) {
 	# todo: add  group filtering
 	handle /oauth2/* {

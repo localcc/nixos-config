@@ -11,6 +11,7 @@
     }
 
     hosts {
+        {$TAILSCALE_NODE_IP} rawr.madoka
         {$TAILSCALE_NODE_IP} jellyfin.madoka
         {$TAILSCALE_NODE_IP} radarr.madoka
         {$TAILSCALE_NODE_IP} sonarr.madoka

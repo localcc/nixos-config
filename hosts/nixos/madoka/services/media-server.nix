@@ -17,6 +17,7 @@ lib.mkMerge [
   {
     age.secrets.madoka-mediaserver-caddy.file = (inputs.secrets + /reverse-proxy/caddy.age);
     age.secrets.madoka-mediaserver-gluetun.file = (inputs.secrets + /mediaserver/gluetun.age);
+    age.secrets.madoka-mediaserver-rawr.file = (inputs.secrets + /mediaserver/rawr.age);
 
     compose.stacks = {
       "mediaserver" = {
@@ -122,6 +123,27 @@ lib.mkMerge [
             "tailscale"
           ];
           network."tailnet" = {};
+        };
+        "rawr" = {
+          image = "localhost/rawr:latest";
+          environment = {
+            "RAWR_SECRETS_FILE" = "/rawr-secrets.json";
+            "TZ" = timeZone;
+          };
+          volumes = [
+            "${dataDir}/rawr:/data:rw"
+            "${mediaServerDir}:/media:rw"
+            "${config.age.secrets.madoka-mediaserver-rawr.path}:/rawr-secrets.json"
+            "${./media-server/rawr.json}:/config/rawr.json"
+          ];
+          dependsOn = [
+            "qbittorrent"
+            "tailscale"
+          ];
+          network."tailnet" = {};
+          extraOptions = [
+            "--device=/dev/dri/renderD128:/dev/dri/renderD128:rwm"
+          ];
         };
         "jellyfin" = {
           image = "lscr.io/linuxserver/jellyfin:latest";

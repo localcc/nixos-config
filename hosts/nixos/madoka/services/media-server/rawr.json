@@ -1,0 +1,65 @@
+{
+  "hardware_acceleration": { "Vaapi": "/dev/dri/renderD128" },
+  "libraries": [
+    {
+      "name": "Shows",
+      "content_type": "TvShows",
+      "paths": [ "/media/sonarr" ],
+      "provider_order": [ "omdb", "tmdb", "imdb" ]
+    },
+    {
+      "name": "Movies",
+      "content_type": "Movies",
+      "paths": [ "/media/radarr" ],
+      "provider_order": [ "omdb", "tmdb", "imdb" ]
+    },
+    {
+      "name": "Anime",
+      "content_type": "TvShows",
+      "paths": [ "/media/animarr" ],
+      "provider_order": [ "omdb", "tmdb", "imdb" ]
+    },
+    {
+      "name": "Anime (Movies)",
+      "content_type": "Movies",
+      "paths": [ "/media/radanimarr" ],
+      "provider_order": [ "omdb", "tmdb", "imdb" ]
+    }
+  ],
+  "transcoding": {
+    "video": [
+      "Source",
+      {
+        "Transcode": {
+          "codec": { "Hevc": { "preset": "p1" } },
+          "bitrates": [ "5mbps", "20mbps", "40mbps", "60mbps" ]
+        }
+      },
+      {
+        "Transcode": {
+          "codec": { "H264": { "preset": "p1" } },
+          "bitrates": [ "5mbps", "20mbps", "40mbps", "60mbps" ]
+        }
+      }
+    ],
+    "audio": [
+      "Source",
+       {
+        "Transcode": {
+          "codec": "Opus",
+          "bitrates": [ "512kbps" ]
+        }
+      },
+      {
+        "Transcode": {
+          "codec": "Eac3",
+          "bitrates": [ "2mbps" ]
+        }
+      }
+    ]
+  },
+  "rescan_interval": "24h",
+  "background_scan_bandwidth": "24mbps",
+  "scan_concurrency": 2
+}
+
