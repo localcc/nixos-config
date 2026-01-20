@@ -35,6 +35,10 @@
       url = "github:schembriaiden/helium-browser-nix-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    ddns-client = {
+      url = "github:localcc/ddns-client/nix-module";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     proton-cachyos = {
       url = "github:powerofthe69/proton-cachyos-nix";

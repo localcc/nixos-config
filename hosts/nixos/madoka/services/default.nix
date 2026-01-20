@@ -13,6 +13,7 @@
     ./forgejo.nix
     ./harmonia.nix
     ./autossh.nix
+    ./ddns-client.nix
     ./oauth2-proxy
     inputs.private-services.nixosModules.madoka
   ];
