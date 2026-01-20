@@ -8,6 +8,7 @@
     inputs.agenix.overlays.default
     inputs.rust-overlay.overlays.default
     inputs.niri.overlays.niri
+    inputs.helium.overlays.default
   ];
 
   # auto gc

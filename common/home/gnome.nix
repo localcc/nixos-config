@@ -25,7 +25,7 @@ in
       enable = lib.mkEnableOption "GNOME";
       dockItems = {
         left = mkDockOption [
-          "microsoft-edge.desktop"
+          "helium.desktop"
           "org.telegram.desktop.desktop"
           "discord.desktop"
         ];

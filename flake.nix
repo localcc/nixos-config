@@ -9,6 +9,10 @@
       url = "git+ssh://forgejo@ssh-git.madoka.dev:2222/localcc/nixos-config-secrets.git";
       flake = false;
     };
+    helium = {
+      url = "github:schembriaiden/helium-browser-nix-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     gpu-switcher = {
       url = "github:localcc/gpu-switcher";
       inputs.nixpkgs.follows = "nixpkgs";

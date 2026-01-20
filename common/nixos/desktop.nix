@@ -78,13 +78,7 @@ in
         obsidian
         pavucontrol
 
-        
-        (microsoft-edge.override {
-          commandLineArgs = [
-            "--enable-features=TouchpadOverscrollHistoryNavigation,VaapiVideoDecodeLinuxGL,VaapiVideoEncoder,VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport,UseMultiPlaneFormatForHardwareVideo"
-            "--disable-features=GlobalShortcutsPortal" # https://issues.chromium.org/issues/404298968
-          ];
-        })
+        helium
       ];
 
     };
