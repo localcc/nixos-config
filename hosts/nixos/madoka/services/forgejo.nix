@@ -38,7 +38,9 @@ let
       ROOT_URL = https://git.madoka.dev
       HTTP_PORT = 3000
       DISABLE_SSH = false
-      SSH_PORT = 222
+      SSH_PORT = 2222
+      SSH_DOMAIN = ssh-git.madoka.dev
+      START_SSH_SERVER = true
 
       [session]
       COOKIE_NAME = session
@@ -110,7 +112,7 @@ in
     uid = 2001;
     group = "forgejo";
   };
-  
+
   age.secrets.madoka-forgejo-secret-key = {
     file = (inputs.secrets + /forgejo/secret-key.age);
     owner = "2001";
@@ -131,14 +133,14 @@ in
     owner = "2001";
     mode = "600";
   };
-  
+
   compose.stacks = {
     "forgejo" = {
       "forgejo" = {
         image = "codeberg.org/forgejo/forgejo:13-rootless";
         environment = {
           "USER_UID" = "2001";
-          "USER_GID" = "2001";          
+          "USER_GID" = "2001";
         };
         user = "2001:2001";
         volumes = [
@@ -152,8 +154,14 @@ in
           "/etc/localtime:/etc/localtime:ro"
         ];
         ports = [
-          "222:2222"
+          "2222:2222/tcp"
         ];
+        dependsOn = [
+          "cloudflare_tunnel"
+        ];
+        network."forgejo-ipv6" = {
+          ipv6-address = "fd00::2";
+        };
         network."cloudflare_tunnel" = {
           ipv4-address = "172.24.0.6";
         };
@@ -161,6 +169,25 @@ in
           "--userns=keep-id:uid=2001,gid=2001"
         ];
       };
-    };   
+    };
+  };
+  compose.networks = {
+    "forgejo-ipv6" = {
+      ipam = {
+        subnet = "fd00::/64";
+        gateway = "fd00::1";
+        isV6 = true;
+      };
+    };
+  };
+
+  blackwall.rules."forgejo" = {
+    destinationPorts = [
+      {
+        port = 2222;
+        type = "tcp";
+      }
+    ];
+    verdict = "accept";
   };
 }
