@@ -57,7 +57,9 @@ in
         qemu-user
 
         # rust dev
-        rust-bin.stable."1.90.0".default
+        (rust-bin.stable."1.90.0".default.override {
+          extensions = [ "rust-analyzer" "rust-src" ];
+        })
 
         # apps
         telegram-desktop
