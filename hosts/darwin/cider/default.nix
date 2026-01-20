@@ -4,7 +4,6 @@
 }:
 {
   imports = [
-    ../../../common/nixos/xmachine.nix
     ./hardware-configuration.nix
   ];
 

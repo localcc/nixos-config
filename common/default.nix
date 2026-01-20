@@ -8,6 +8,7 @@
   imports = [
     ./users.nix
     ./nix.nix
+    ./xmachine.nix
     inputs.agenix.nixosModules.default
   ];
 
