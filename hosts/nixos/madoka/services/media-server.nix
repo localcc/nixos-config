@@ -13,9 +13,7 @@ let
 in
 lib.mkMerge [
   {
-    age.secrets.madoka-mediaserver-caddy.file = (inputs.secrets + /mediaserver/caddy.age);
     age.secrets.madoka-mediaserver-gluetun.file = (inputs.secrets + /mediaserver/gluetun.age);
-    age.secrets.madoka-mediaserver-tailscale.file = (inputs.secrets + /mediaserver/tailscale.age);
 
     compose.stacks = {
       "mediaserver" = {
@@ -92,23 +90,6 @@ lib.mkMerge [
           extraOptions = [
             "--cap-add=NET_ADMIN"
           ];
-        };
-        "coredns" = {
-          image = "coredns/coredns:1.13.1";
-          environmentFiles = [
-            config.age.secrets.madoka-mediaserver-caddy.path
-          ];
-          volumes = [
-            "${dataDir}/config/coredns:/etc/coredns:rw"
-          ];
-          cmd = [
-            "-conf"
-            "/etc/coredns/Corefile"
-          ];
-          dependsOn = [
-            "tailscale"
-          ];
-          network."container:tailscale" = {};
         };
         "flaresolverr" = {
           image = "ghcr.io/flaresolverr/flaresolverr:latest";
@@ -274,26 +255,23 @@ lib.mkMerge [
           ];
           network."tailnet" = {};
         };
-        "tailscale" = {
-          image = "tailscale/tailscale:latest";
-          # image = "nginx";
+        "lidarr" = {
+          image = "lscr.io/linuxserver/lidarr:latest";
           environment = {
-            "TS_ACCEPT_DNS" = "1";
-            "TS_STATE_DIR" = "/var/lib/tailscale";
+            "PGID" = "0";
+            "PUID" = "0";
+            "TZ" = timeZone;
           };
-          environmentFiles = [
-            config.age.secrets.madoka-mediaserver-tailscale.path
-          ];
           volumes = [
-            "${dataDir}/data/tailscale:/var/lib/tailscale:rw"
+            "${dataDir}/configs/lidarr:/config:rw"
+            "${dataDir}/data/lidarr:/lidarr:rw"
+            "${mediaServerDir}:/data:rw"
           ];
-          network."tailnet" = {
-            ipv4-address = "172.20.0.2";
-          };          
-          extraOptions = [
-            "--cap-add=NET_ADMIN"
-            "--device=/dev/net/tun:/dev/net/tun:rwm"
+          dependsOn = [
+            "qbittorrent"
+            "tailscale"
           ];
+          network."tailnet" = {};
         };
       };
     };
