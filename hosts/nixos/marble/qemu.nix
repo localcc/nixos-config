@@ -18,6 +18,8 @@ in
 
   services.udev.extraRules = ''
     SUBSYSTEM=="kvmfr", GROUP="kvm", MODE="0660"
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="2dc8", RUN+="/bin/sh -c '/home/kate/vms/attach-controllers.sh >/dev/null 2>&1 &'"
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="054c", ATTR{idProduct}=="0ce6", RUN+="/bin/sh -c '/home/kate/vms/attach-controllers.sh >/dev/null 2>&1 &'"
   '';
 
   environment.systemPackages = with pkgs; [
