@@ -16,12 +16,12 @@
     ./secureboot.nix
     ./sound.nix
     ./desktop.nix
-    ./containers.nix
     ./games.nix
     ./embedded.nix
     ./kde.nix # fuckass hdr
     ./flatpak
     inputs.blackwall.nixosModules.default
+    inputs.sing.nixosModules.default
   ];
 
   nix.settings = {

@@ -5,6 +5,10 @@
     nixpkgs-fork.url = "github:localcc/nixpkgs/unifi-datadir";
     blackwall.url = "github:localcc/blackwall";
 
+    sing = {
+      url = "git+file:///home/kate/dev/nix-sing";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     secrets = {
       url = "git+ssh://forgejo@ssh-git.madoka.dev:2222/localcc/nixos-config-secrets.git";
       flake = false;
