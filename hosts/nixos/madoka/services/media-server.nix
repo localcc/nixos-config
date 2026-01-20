@@ -13,9 +13,9 @@ let
 in
 lib.mkMerge [
   {
-     age.secrets.madoka-mediaserver-caddy.file = (inputs.secrets + /mediaserver/caddy.age);
-     age.secrets.madoka-mediaserver-gluetun.file = (inputs.secrets + /mediaserver/gluetun.age);
-     age.secrets.madoka-mediaserver-tailscale.file = (inputs.secrets + /mediaserver/tailscale.age);
+    age.secrets.madoka-mediaserver-caddy.file = (inputs.secrets + /mediaserver/caddy.age);
+    age.secrets.madoka-mediaserver-gluetun.file = (inputs.secrets + /mediaserver/gluetun.age);
+    age.secrets.madoka-mediaserver-tailscale.file = (inputs.secrets + /mediaserver/tailscale.age);
 
     compose.stacks = {
       "mediaserver" = {
