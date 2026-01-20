@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  inputs,
   ...
 }:
 let
@@ -17,6 +18,15 @@ let
     drkonqi
     kauth
   ] else [ ];
+
+  pkgs-master = import inputs.nixpkgs-master {
+    system = pkgs.stdenv.system;
+    config.allowUnfree = true;
+  };
+
+  kde-overlay = final: prev: {
+    kdePackages = pkgs-master.kdePackages; 
+  };
 in
 {
   options = {
@@ -26,6 +36,10 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    nixpkgs.overlays = [
+      kde-overlay
+    ];
+    
     services.desktopManager.plasma6.enable = true;
     security.pam.services = {
       login.kwallet.enable = lib.mkForce false;
@@ -47,11 +61,15 @@ in
       dolphin
       baloo-widgets # baloo information in Dolphin
       dolphin-plugins
-      spectacle
+      # spectacle
       ffmpegthumbs
       krdp
     ] ++ excludeAdditional;
-
+    environment.systemPackages = with pkgs; [
+      kdePackages.oxygen
+      kdePackages.oxygen-icons
+    ];
+    
     services.xserver = {
       enable = true;
       displayManager.gdm.enable = true;
