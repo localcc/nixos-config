@@ -55,7 +55,6 @@ in
     ./hardware-configuration.nix
     ./alsa.nix
     ./qemu.nix
-    ../../../common/nixos/niri.nix
     (import ./vms/win11-vm.nix (
       args
       // {
@@ -69,13 +68,9 @@ in
     ))
     inputs.gpu-switcher.nixosModules.default
   ];
-
-  gdm.enable = true;
-  niri.enable = true;
-  gnome.enable = true;
   kde.enable = true;
   desktop.enable = true;
-  desktop.multi-de = true;
+  desktop.multi-de = false;
   wifi.enable = true;
   games.enable = true;
   embedded.enable = true;
@@ -147,9 +142,6 @@ in
     { lib, ... }:
     {
       imports = [
-        ../../../common/home/gnome.nix
-        ../../../common/home/niri.nix
-        ../../../common/home/niri-noctalia.nix
         ../../../common/home/jj.nix
         ../../../common/home/git.nix
         ../../../common/home/helix.nix
@@ -197,110 +189,6 @@ in
           X-KDE-autostart-phase=2
           NoDisplay=true
         '';
-      };
-
-      # fuckass unity and xwayland-satellite
-      gnome.enable = true;
-      niri = {
-        enable = true;
-        noctalia = true;
-        laptop = true;
-        wallpaper = (inputs.self + /assets/wallpaper1.jpg);
-        pfp = config.age.secrets.pfp.path;
-
-        binds = {
-          "F6".action.screenshot = { };
-        };
-
-        debug = {
-          render-drm-device = "/dev/dri/renderD128";
-        };
-
-        touchpad = {
-          scroll-factor = 0.5;
-        };
-
-        outputs."DP-10" = {
-          mode = {
-            width = 2560;
-            height = 1440;
-            refresh = 143.981;
-          };
-
-          position = {
-            x = 0;
-            y = 0;
-          };
-
-          focus-at-startup = true;
-        };
-
-        outputs."DP-11" = {
-          mode = {
-            width = 2560;
-            height = 1440;
-            refresh = 143.981;
-          };
-
-          position = {
-            x = 0;
-            y = 0;
-          };
-
-          focus-at-startup = true;
-        };
-        outputs."DP-12" = {
-          mode = {
-            width = 2560;
-            height = 1440;
-            refresh = 143.981;
-          };
-
-          position = {
-            x = 0;
-            y = 0;
-          };
-
-          focus-at-startup = true;
-        };
-
-        outputs."DP-2" = {
-          mode = {
-            width = 3440;
-            height = 1440;
-            refresh = 59.987;
-          };
-
-          position = {
-            x = -450;
-            y = 0;
-          };
-        };
-        outputs."DP-3" = {
-          mode = {
-            width = 3440;
-            height = 1440;
-            refresh = 59.987;
-          };
-
-          position = {
-            x = -450;
-            y = 0;
-          };
-        };
-
-        outputs."eDP-1" = {
-          position = {
-            x = 450;
-            y = 1440;
-          };
-        };
-        outputs."eDP-2" = {
-          position = {
-            x = 450;
-            y = 1440;
-          };
-        };
       };
 
       # do not remove
