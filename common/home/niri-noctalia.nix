@@ -169,6 +169,7 @@ in
         wallpaper = {
           enabled = true;
           setWallpaperOnAllMonitors = true;
+          directory = cfg.wallpaper + "/../";
           fillMode = "crop";
         };
         appLauncher = {
