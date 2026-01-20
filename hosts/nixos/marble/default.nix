@@ -108,6 +108,7 @@ in
     { lib, ... }:
     {
       imports = [
+        ../../../common/home/gnome.nix
         ../../../common/home/niri.nix
         ../../../common/home/niri-noctalia.nix
         ../../../common/home/jj.nix
