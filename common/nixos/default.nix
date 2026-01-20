@@ -1,6 +1,7 @@
 {
   pkgs,
   inputs,
+  hostname,
   ...
 }:
 {
@@ -38,6 +39,8 @@
     ];
   };
 
+  networking.hostName = hostname;
+
   # boot
   boot.loader.timeout = 0;
   # boot.splash = {
@@ -62,5 +65,11 @@
       
       # shell
       wget
+
+      # cache server update
+      (pkgs.writeShellScriptBin "nixcacheupdate" ''
+        NIXPKGS_HASH=$(curl https://cache.madoka.dev/update-revs/nixpkgs-${hostname}.rev)
+        nix flake lock --override-input nixpkgs github:NixOS/nixpkgs/$NIXPKGS_HASH
+      '')
     ];
 }
