@@ -10,6 +10,18 @@
     inputs.niri.overlays.niri
     inputs.proton-cachyos.overlays.default
     inputs.helium.overlays.default
+    # helium 0.16.x's Qt shim aborts at startup without Qt plugins on NixOS
+    (final: prev: {
+      helium = prev.symlinkJoin {
+        name = "helium";
+        paths = [ prev.helium ];
+        buildInputs = [ prev.makeWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/helium \
+            --set QT_PLUGIN_PATH ${prev.qt6.qtbase}/lib/qt-6/plugins
+        '';
+      };
+    })
   ];
 
   # auto gc
