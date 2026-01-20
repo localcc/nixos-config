@@ -71,6 +71,8 @@ in
     inputs.gpu-switcher.nixosModules.default
   ];
 
+  security.sudo.wheelNeedsPassword = false;
+
   kde.enable = true;
   desktop.enable = true;
   desktop.multi-de = false;
@@ -87,6 +89,15 @@ in
     "plugdev"
     "dialout"
   ];
+  virtualisation = {
+    containers.enable = true;
+    podman = {
+      enable = true;
+      dockerCompat = true;
+      defaultNetwork.settings.dns_enabled = true;
+    };
+  };
+
 
   networking.firewall.enable = false;
   blackwall.enable = true;
@@ -195,13 +206,14 @@ in
       };
       helix.enable = true;
       home.packages = with pkgs; [
+        inputs.ida.packages.${system}.default
         unstable.devenv
         slack
         virt-manager
         inputs.colmena.packages.${system}.colmena
-        (blender.override {
-          cudaSupport = true;
-        })
+        # (blender.override {
+        #   cudaSupport = true;
+        # })
         unityhub
       ];
 
@@ -254,7 +266,20 @@ in
 
   # Boot
   boot.kernel.sysctl."fs.inotify.max_user_watches" = 2097152;
-  boot.kernelPackages = pkgs.linuxPackages_zen;
+  # Minimal localmodconfig-derived config (see kernel.config); refresh with
+  # `make olddefconfig && make localmodconfig` against the zen source.
+  boot.kernelPackages = pkgs.linuxPackagesFor (
+    pkgs.linuxManualConfig {
+      inherit (pkgs.linuxPackages_zen.kernel) src version modDirVersion;
+      configfile = ./kernel.config;
+      allowImportFromDerivation = true;
+      features = {
+        efiBootStub = true;
+        netfilterRPFilter = true;
+        ia32Emulation = true;
+      };
+    }
+  );
   boot.secureboot.enable = true;
   boot.splash = {
     enable = lib.mkDefault true;
@@ -365,6 +390,10 @@ in
       fi
     '';
   };
+
+  services.scx = {
+    enable = true;
+    scheduler = "scx_lavd";
   };
 
   # GPU
@@ -400,12 +429,12 @@ in
     };
 
     package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
-      version = "615.71.09";
-      sha256_64bit = "sha256-zc7tIrvrYSSNGm3qvCWWZz46ZQFpjucayNL9wo87cP4=";
-      sha256_aarch64 = "sha256-IbekQhE7cFfmnPZaLY9NDYcF7CoNZ+2Qb7sRd4EOgWM=";
-      openSha256 = "sha256-3gByMYIwFzRaLdDG+roCEOuKRRJDrljG9AlLnRZTirM=";
-      settingsSha256 = "sha256-LK1LU8mDkM/XVRKPBtuOZh9nIP/lGFLAJnmasEX8jhg=";
-      persistencedSha256 = "sha256-qPRb+3d88+2RcpUkoBTbjIaImnQ+jX+/6p1vXcJ5geE=";
+      version = "615.78.08";
+      sha256_64bit = "sha256-Pj9t3cLudnoIGFMAr3vjyyhuznZpjS3eNSRZl4LQf/4=";
+      sha256_aarch64 = "sha256-UHYBE1AYHoGgMfD9AS/jX+S+N8eCDWUft6qolK9Eejc=";
+      openSha256 = "sha256-HBINiOjL0ZJLIAJeNIBYHBnwgUXtNwPPtnFpAI1YwF4=";
+      settingsSha256 = "sha256-inDRpG02sdDgHmlqgu/DsgK8OFdOt1fZIYyXdhlGC/c=";
+      persistencedSha256 = "sha256-RzeR6Ldct6MUxjnXRyThdh5Y3jjMehTVg85MtwuWNX4=";
     };
   };
 

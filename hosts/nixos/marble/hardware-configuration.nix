@@ -6,6 +6,7 @@
 {
   hardware.enableRedistributableFirmware = lib.mkDefault true;
 
+  boot.initrd.includeDefaultModules = false;
   boot.initrd.kernelModules = [
     "vfio_pci"
     "vfio"
@@ -17,6 +18,9 @@
     "thunderbolt"
     "usb_storage"
     "usbhid"
+    "hid_generic"
+    "atkbd"
+    "i8042"
     "sd_mod"
     "rtsx_pci_sdmmc"
     "k10temp"
