@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   ...
 }:
 let
@@ -20,8 +21,19 @@ let
 in
 {
   home.packages = with pkgs; [
+    pwvucontrol
+    pavucontrol
+
     (jackWrap carla)
+
+    (yabridge.override { wineWow64Packages = wineWow64Packages; })
+    (yabridgectl.override { wineWow64Packages = wineWow64Packages; })
+    wineWow64Packages.yabridge
   ];
+  home.sessionVariables = {
+    "NIX_PROFILES" = "${pkgs.yabridge} $NIX_PROFILES";
+  };
+
   home.file.".config/pipewire/pipewire.conf.d/realtime.conf" = {
     text = ''
       module.rt.args = {
@@ -34,6 +46,23 @@ in
   home.file.".config/pipewire/pipewire.conf.d/replay-setup.conf" = {
     text = ''
       context.modules = [
+        {
+          name = libpipewire-module-loopback
+          args = {
+            node.description = "Carla mic"
+            capture.props = {
+              node.name = "carla-mic-output"
+              node.description = "Carla mic output"
+              audio.position = [ FL ]
+              node.passive = true
+            }
+            playback.props = {
+              node.name = "Carla mic input"
+              media.class = "Audio/Source"
+              audio.position = [ MONO ]
+            }
+          }
+        }
       	{
       		name = libpipewire-module-loopback
       		args = {
@@ -99,5 +128,26 @@ in
       	}
       ]   
     '';
+  };
+
+  systemd.user.services = {
+    carla-autorun = {
+      Unit = {
+        Description = "carla vst";
+        After = [ "pipewire.service" ];
+      };
+
+      Service = {
+        Type = "exec";
+        Environment = [
+          "NIX_PROFILES=\"${pkgs.yabridge} $NIX_PROFILES\""
+        ];
+        ExecStart = "${lib.getExe pkgs.carla} /home/kate/mic.carxp";
+      };
+
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
+    };
   };
 }
