@@ -42,6 +42,10 @@
       url = "github:uwu/ddns-client";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    hrt-scraper = {
+      url = "git+ssh://forgejo@ssh-git.madoka.dev:2222/localcc/hrt-scraper.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     proton-cachyos = {
       url = "github:powerofthe69/proton-cachyos-nix";

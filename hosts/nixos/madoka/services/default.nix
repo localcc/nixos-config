@@ -14,6 +14,7 @@
     ./harmonia.nix
     ./autossh.nix
     ./ddns-client.nix
+    ./hrt-scraper.nix
     ./oauth2-proxy
     inputs.private-services.nixosModules.madoka
   ];
