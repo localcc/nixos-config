@@ -10,7 +10,7 @@ let
   isodir = "${vmdir}/isos";
 
   win11-vmdir = "${vmdir}/win11";
-  win11-vmpart = "/dev/nvme0n1p4";
+  win11-vmpart = "/home/kate/vms/win11/win11.qcow2";
 
   vmdirs = [
     isodir

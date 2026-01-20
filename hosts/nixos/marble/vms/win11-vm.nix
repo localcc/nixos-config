@@ -58,7 +58,7 @@ let
     #   23
     # ]
   ];
-  emulatorSet = "10,22,8,20";
+  emulatorSet = "2,14,3,15,9,21,11,23";
 
   vmIsolatedThreads = "${emulatorSet}";
   normalHostThreads = "0-23";
@@ -153,9 +153,9 @@ let
           address = {
             type = "pci";
             domain = hex "0x0000";
-            bus = hex "0x04";
+            bus = hex "0x01";
             slot = hex "0x00";
-            function = hex "0x0";
+            function = hex "0x1";
           };
         }
       ]
@@ -410,25 +410,25 @@ in
           emulator = "${pkgs.qemu}/bin/qemu-system-x86_64";
           disk = [
             {
-              type = "block";
+              type = "file";
               device = "disk";
               driver = {
                 name = "qemu";
-                type = "raw";
+                type = "qcow2";
                 cache = "none";
                 discard = "unmap";
                 detect-zeroes = "unmap";
                 io = "io_uring";
               };
-              source.dev = vmpart;
+              source.file = vmpart;
               target = {
-                dev = "vda";
-                bus = "virtio";
+                dev = "sda";
+                bus = "sata";
               };
               address = {
-                type = "pci";
+                type = "drive";
                 controller = 0;
-                bus = hex "0x09";
+                bus = hex "0x0";
                 target = 0;
                 unit = 0;
               };
@@ -604,13 +604,21 @@ in
             { value = "file=${./acpi-battery.bin}"; }
             { value = "-fw_cfg"; }
             { value = "opt/ovmf/X-PciMmio64Mb,string=65536"; }
-            { value = "-device"; }
-            { value = "{'driver':'ivshmem-plain','id':'shmem0','memdev':'looking-glass'}"; }
-            { value = "-object"; }
-            {
-              value = "{'qom-type':'memory-backend-file','id':'looking-glass','mem-path':'/dev/kvmfr0','size':134217728,'share':true}";
-            }
-          ];
+          ]
+          ++ (
+            if installation then
+              [ ]
+            else
+              [
+
+                { value = "-device"; }
+                { value = "{'driver':'ivshmem-plain','id':'shmem0','memdev':'looking-glass'}"; }
+                { value = "-object"; }
+                {
+                  value = "{'qom-type':'memory-backend-file','id':'looking-glass','mem-path':'/dev/kvmfr0','size':134217728,'share':true}";
+                }
+              ]
+          );
         };
       };
     }
