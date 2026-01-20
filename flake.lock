@@ -64,6 +64,21 @@
         "url": "https://codeberg.org/LGFae/awww"
       }
     },
+    "blackwall": {
+      "locked": {
+        "lastModified": 1769347312,
+        "narHash": "sha256-3tcp/synl7qdcydqoXK/HWQJR5jCMgTKxt3By6ma7nc=",
+        "owner": "localcc",
+        "repo": "blackwall",
+        "rev": "443afe41590b26f34d13693ecac9841c2605d878",
+        "type": "github"
+      },
+      "original": {
+        "owner": "localcc",
+        "repo": "blackwall",
+        "type": "github"
+      }
+    },
     "chaotic": {
       "inputs": {
         "flake-schemas": "flake-schemas",
@@ -758,6 +773,7 @@
         "NixVirt": "NixVirt",
         "agenix": "agenix",
         "awww": "awww",
+        "blackwall": "blackwall",
         "chaotic": "chaotic",
         "colmena": "colmena",
         "disko": "disko",
@@ -773,6 +789,7 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "noctalia": "noctalia",
         "rust-overlay": "rust-overlay_5",
+        "secrets": "secrets",
         "supergfxctl": "supergfxctl"
       }
     },
@@ -878,6 +895,22 @@
         "owner": "oxalica",
         "repo": "rust-overlay",
         "type": "github"
+      }
+    },
+    "secrets": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1769419009,
+        "narHash": "sha256-E2GUR4I7HGwimX+CGLHWZ31YazNoPw0qqVBuloWLJco=",
+        "ref": "refs/heads/main",
+        "rev": "a6da6d173e0001a244710c92e1d74c144c8a5908",
+        "revCount": 1,
+        "type": "git",
+        "url": "ssh://forgejo@ssh-git.madoka.dev:2222/localcc/nixos-config-secrets.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://forgejo@ssh-git.madoka.dev:2222/localcc/nixos-config-secrets.git"
       }
     },
     "stable": {

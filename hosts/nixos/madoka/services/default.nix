@@ -19,17 +19,15 @@
     autoPrune.enable = true;
     dockerCompat = true;
   };
-
-  # Enable container name DNS for all Podman networks.
-  networking.firewall.interfaces =
-    let
-      matchAll = if !config.networking.nftables.enable then "podman+" else "podman*";
-    in
-    {
-      "${matchAll}".allowedUDPPorts = [ 53 ];
-    };
-
   virtualisation.oci-containers.backend = "podman";
+
+  blackwall.rules.fwd-dnat = {
+    type = "forward";
+    text = ''
+      ct status dnat accept
+      ct state new iifname "podman*" accept
+    '';
+  };
 
   compose.networks = {
     "tailnet" = {

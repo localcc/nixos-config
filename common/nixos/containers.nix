@@ -25,6 +25,11 @@ let
         description = "ipv4 address within the network";
         default = null;
       };
+      ipv6-address = mkOption {
+        type = types.nullOr types.str;
+        description = "ipv6 address within the network";
+        default = null;
+      };
     };
   };
 
@@ -80,6 +85,11 @@ let
         type = types.str;
         description = "Gateway address inside of the network";
       };
+      isV6 = mkOption {
+        type = types.bool;
+        description = "Is the network ipv6";
+        default = false;
+      };
     };
   };
   networkOptions = with lib; {
@@ -122,6 +132,35 @@ in
     (lib.mkIf (cfg.stacks != { }) (
       lib.mkMerge [
         {
+          blackwall.zones."podman" = {
+            interfaces = [ "podman*" ];
+          };
+          blackwall.rules."podman-dns" = {
+            type = "input";
+            from = [ "podman" ];
+            protocols = [
+              "tcp"
+              "udp"
+            ];
+            destinationPorts = [ 53 ];
+            verdict = "accept";
+          };
+          blackwall.rules."podman-fwd" = {
+            type = "forward";
+            from = [ "podman" ];
+            requiredStates = [
+              "established"
+              "related"
+            ];
+            verdict = "accept";
+          };
+          blackwall.rules."podman-fwd-1" = {
+            type = "forward";
+            to = [ "podman" ];
+            verdict = "accept";
+          };
+        }
+        {
           virtualisation.oci-containers.containers = mapContainer (
             stackName: name: value:
             let
@@ -138,17 +177,23 @@ in
                 lib.mapAttrs (
                   name: value:
                   let
-                    networkOptions = if value.ipv4-address != null then ":ip=${value.ipv4-address}" else "";
+                    ipv4Options = lib.lists.optional (value.ipv4-address != null) "ip=${value.ipv4-address}";
+                    ipv6Options = lib.lists.optional (value.ipv6-address != null) "ip=${value.ipv6-address}";
+
+                    networkOptions = lib.strings.intersperse "," (ipv4Options ++ ipv6Options);
+                    networkArg = lib.concatStringsSep ":" ([ name ] ++ networkOptions);
                   in
-                  "--network=${name}${networkOptions}"
+                  "--network=${networkArg}"
                 ) value.network
               );
 
-              mkHealthcheckOption = option: (lib.mkIf (value.healthcheck.${option} != null) {
-                extraOptions = [
-                  "--health-${option}=${value.healthcheck.${option}}"
-                ];
-              });
+              mkHealthcheckOption =
+                option:
+                (lib.mkIf (value.healthcheck.${option} != null) {
+                  extraOptions = [
+                    "--health-${option}=${value.healthcheck.${option}}"
+                  ];
+                });
             in
             {
               inherit name;
@@ -251,6 +296,50 @@ in
       ]
     ))
     (lib.mkIf (cfg.networks != { }) {
+      # todo: maybe do something for ipam null? { };
+      blackwall =
+        let
+          ipamNetworks = lib.filterAttrs (name: value: value.ipam != null) cfg.networks;
+          ipamNetworkNames = lib.mapAttrsToList (name: value: "podman-network-${name}") ipamNetworks;
+        in
+        {
+          zones = lib.mapAttrs' (name: value: {
+            name = "podman-network-${name}";
+            value = lib.mkMerge [
+              (lib.mkIf (!value.ipam.isV6) {
+                ipv4Addresses = [ "${value.ipam.subnet}" ];
+              })
+              (lib.mkIf (value.ipam.isV6) {
+                ipv6Addresses = [ "${value.ipam.subnet}" ];
+              })
+            ];
+          }) ipamNetworks;
+
+          rules."podman-networks-dns" = {
+            type = "input";
+            from = ipamNetworkNames;
+            protocols = [
+              "tcp"
+              "udp"
+            ];
+            destinationPorts = [ 53 ];
+            verdict = "accept";
+          };
+          rules."podman-networks-fwd" = {
+            type = "forward";
+            from = ipamNetworkNames;
+            requiredStates = [
+              "established"
+              "related"
+            ];
+            verdict = "accept";
+          };
+          rules."podman-networks-fwd-1" = {
+            type = "forward";
+            to = ipamNetworkNames;
+            verdict = "accept";
+          };
+        };
       systemd.services = lib.mapAttrs' (
         name: value:
         let

@@ -18,7 +18,7 @@ let
     )
   );
 in
-{ 
+{
   imports = [
     ./samba.nix
     ./podman.nix
@@ -78,10 +78,53 @@ in
     };
   };
 
+  networking.firewall.enable = false;
+  blackwall.enable = true;
+
+  blackwall.hooks = {
+    input = {
+      priority = "filter + 1";
+      defaultVerdict = "drop";
+    };
+    forward = {
+      priority = "filter + 1";
+      defaultVerdict = "drop";
+    };
+  };
+
+  blackwall.zones = {
+    "uplink" = {
+      interfaces = [ "enp5s0" ];
+    };
+    "uplink-local" = {
+      parents = [ "uplink" ];
+      ipv4Addresses = [ "192.168.0.0/24" ];
+    };
+    "tailscale" = {
+      interfaces = [ "tailscale0" ];
+    };
+    "podman" = {
+      interfaces = [ "podman*" ];
+    };
+    "local" = {
+      parents = [
+        "uplink-local"
+        "tailscale"
+      ];
+    };
+  };
+
+  blackwall.rules.ssh = {
+    type = "input";
+    # from = [ "local" ];
+    destinationPorts = [ { port = 22; type = "tcp"; } ];
+    verdict = "accept";
+  };
+
   environment.systemPackages = with pkgs; [
     helix
   ];
-    
+
   # Security
   security.polkit.enable = true;
   security.sudo.wheelNeedsPassword = false;

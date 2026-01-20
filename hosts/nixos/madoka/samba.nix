@@ -47,12 +47,11 @@ in
   #  "d /mnt/Storage/WitchHut 1770 root users -"
   #  "d /mnt/Storage/WitchHut/Kate 1700 localcc root -"
   #];
-  
+
   # Smb
   services.samba = {
     package = pkgs.samba4Full;
     enable = true;
-    openFirewall = true;
 
     settings = {
       global = {
@@ -80,11 +79,31 @@ in
       };
     };
   };
+  blackwall.rules."samba" = {
+    type = "input";
+    from = [ "local" ];
+    destinationPorts = [
+      { port = 139; type = "tcp"; }
+      { port = 445; type = "tcp"; }
+      { port = 137; type = "udp"; }
+      { port = 138; type = "udp"; }
+    ];
+    verdict = "accept";
+  };
 
   # smb windows discovery
   services.samba-wsdd = {
     enable = true;
-    openFirewall = true;
+    openFirewall = false;
+  };
+  blackwall.rules."wsdd" = {
+    type = "input";
+    from = [ "local" ];
+    destinationPorts = [
+      { port = 5357; type = "tcp"; }
+      { port = 3702; type = "udp"; }
+    ];
+    verdict = "accept";
   };
 
   services.avahi = {
@@ -92,7 +111,15 @@ in
     publish.userServices = true;
     nssmdns4 = true;
     enable = true;
-    openFirewall = true;
+    openFirewall = false;
+  };
+  blackwall.rules."avahi" = {
+    type = "input";
+    from = [ "local" ];
+    destinationPorts = [
+      5353
+    ];
+    verdict = "accept";
   };
 
   # creating all users

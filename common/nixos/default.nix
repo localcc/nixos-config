@@ -1,5 +1,6 @@
 {
   pkgs,
+  inputs,
   ...
 }:
 {
@@ -18,6 +19,7 @@
     ./supergfxd.nix
     ./desktop.nix
     ./containers.nix
+    inputs.blackwall.nixosModules.default
   ];
 
   # boot
