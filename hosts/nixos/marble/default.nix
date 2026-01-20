@@ -54,6 +54,48 @@ in
     "dialout"
   ];
 
+  networking.firewall.enable = true;
+  blackwall.enable = false;
+  blackwall.hooks = {
+    input = {
+      priority = "filter + 1";
+      defaultVerdict = "drop";
+    };
+    forward = {
+      priority = "filter + 1";
+      defaultVerdict = "drop";
+    };
+  };
+
+  blackwall.zones = {
+    "uplink" = {
+      interfaces = [
+        "wlp99s0"
+        "enp103s0f3u1u2"
+      ];
+    };
+  };
+  blackwall.rules.ssh = {
+    type = "input";
+    destinationPorts = [
+      {
+        port = 22;
+        type = "tcp";
+      }
+    ];
+    verdict = "accept";
+  };
+  blackwall.rules.lc-dev = {
+    from = [ "uplink" ];
+    destinationPorts = [
+      {
+        port = 1562;
+        type = "tcp";
+      }
+    ];
+    verdict = "accept";
+  };
+
   age.secrets.pfp = {
     file = (inputs.secrets + /pfp.age);
     owner = "kate";
