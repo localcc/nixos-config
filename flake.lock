@@ -329,11 +329,11 @@
       },
       "locked": {
         "dir": "nixos",
-        "lastModified": 1787496569,
-        "narHash": "sha256-8rg5nkztX3zkGH/KEgGfLV37Sxfu4M/Ga5xZ0P/crRs=",
+        "lastModified": 1787662655,
+        "narHash": "sha256-IyKRJeToF+tLh2cwfZzd89oU6L75XmFal9gnaBFrBrc=",
         "owner": "localcc",
         "repo": "g-helper-linux",
-        "rev": "bdddcf63d8e90951861bd5fb8aef6f0daafda654",
+        "rev": "aef17c1cdb42f850a36ae3db04f0b4179896480a",
         "type": "github"
       },
       "original": {
@@ -1140,11 +1140,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1787566000,
-        "narHash": "sha256-KvgCdpN2m4ypwz2JHLo5VZSBtFKDWdmul1Ngz96vk4E=",
+        "lastModified": 1787861253,
+        "narHash": "sha256-bEwfDd06k+Fwxpu11V2+LcerSjS87aGd/st9hJZO0f8=",
         "ref": "refs/heads/main",
-        "rev": "92d7aaaf9cae82990caa05c6c25421ac9109683f",
-        "revCount": 5,
+        "rev": "ec856be5c19ced6c88855c7d9e65afbb56e71dd3",
+        "revCount": 6,
         "type": "git",
         "url": "ssh://forgejo@ssh-git.madoka.dev:2222/localcc/nixos-config-secrets.git"
       },
