@@ -8,6 +8,7 @@
     ./tailscale.nix
     ./media-server.nix
     ./reverse-proxy.nix
+    ./pocket-id.nix
   ];
 
   # Runtime
