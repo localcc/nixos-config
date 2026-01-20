@@ -35,9 +35,6 @@ in
       }
     ))
     inputs.gpu-switcher.nixosModules.default
-    inputs.chaotic.nixosModules.nyx-cache
-    inputs.chaotic.nixosModules.nyx-overlay
-    inputs.chaotic.nixosModules.nyx-registry
   ];
 
   gdm.enable = true;
