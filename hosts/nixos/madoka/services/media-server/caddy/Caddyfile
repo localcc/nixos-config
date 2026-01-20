@@ -1,0 +1,96 @@
+{
+    auto_https disable_redirects
+}
+
+http://oauth.madoka {
+    reverse_proxy oauth2-proxy:4180 {
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-Uri {uri}
+    }
+}
+
+http://jellyfin.madoka {
+    reverse_proxy jellyfin:8096
+}
+
+(mediaserverAuth) {
+	# todo: add  group filtering
+	handle /oauth2/* {
+		reverse_proxy oauth2-proxy:4180 {
+			header_up X-Real-IP {remote_host}
+			header_up X-Forwarded-Uri {uri}
+		}
+	}
+
+	handle {
+        forward_auth oauth2-proxy:4180 {
+            uri /oauth2/auth
+
+            header_up X-Real-IP {remote_host}
+
+            @error status 401
+            handle_response @error {
+                redir * /oauth2/sign_in?rd={scheme}://{host}{uri}
+            }
+        }
+		{block}
+    }
+}
+
+http://radarr.madoka {
+	import mediaserverAuth {
+        reverse_proxy radarr:7878
+	}
+}
+
+http://sonarr.madoka {
+	import mediaserverAuth {
+	    reverse_proxy sonarr:8989
+	}
+}
+
+http://animarr.madoka {
+	import mediaserverAuth {
+        reverse_proxy animarr:8989
+    }
+}
+
+http://radanimarr.madoka {
+	import mediaserverAuth {
+        reverse_proxy radanimarr:7878
+    }
+}
+
+http://jackett.madoka {
+    reverse_proxy jackett:9117
+}
+
+http://torrent.madoka {
+    reverse_proxy {$TORRENT_HOST_IP}:8081
+}
+
+http://mediaserver.madoka {
+    reverse_proxy jellyseerr:5055
+}
+
+http://prowlarr.madoka {
+	import mediaserverAuth {
+        reverse_proxy prowlarr:9696
+    }
+}
+
+http://animlarr.madoka {
+	import mediaserverAuth {
+        reverse_proxy animlarr:9696
+    }
+}
+
+http://lidarr.madoka {
+    import mediaserverAuth {
+        reverse_proxy lidarr:8686
+    }
+}
+
+http://milkjar.madoka {
+	reverse_proxy milkjar-caddy
+}

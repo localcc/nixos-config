@@ -10,9 +10,12 @@ let
   mediaServerDir = "/mnt/Storage/WitchHut/media-server";
   torrentDir = "/mnt/Storage/WitchHut/torrents";
   timeZone = "Europe/Amsterdam";
+
+  caddyDir = ./media-server/caddy;
 in
 lib.mkMerge [
   {
+    age.secrets.madoka-mediaserver-caddy.file = (inputs.secrets + /reverse-proxy/caddy.age);
     age.secrets.madoka-mediaserver-gluetun.file = (inputs.secrets + /mediaserver/gluetun.age);
 
     compose.stacks = {
@@ -79,7 +82,7 @@ lib.mkMerge [
             config.age.secrets.madoka-mediaserver-caddy.path
           ];
           volumes = [
-            "${dataDir}/config/caddy:/etc/caddy:rw"
+            "${caddyDir}:/etc/caddy:ro"
             "${dataDir}/configs/caddy:/config:rw"
             "${dataDir}/data/caddy:/data:rw"
           ];
