@@ -29,6 +29,7 @@
   boot.kernelParams = [
     "amd_iommu=on"
     "nvidia.NVreg_RegistryDwords=EnableBrightnessControl=1"
+  ];
   boot.kernelPatches = [
     {
       name = "dgpu-runtime-enable";
