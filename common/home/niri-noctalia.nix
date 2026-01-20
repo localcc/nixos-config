@@ -285,5 +285,84 @@ in
       wallpaper = cfg.wallpaper;
       type = matugenSchemeType;
     };
+
+    programs.alacritty.settings.colors = {
+      primary = {
+        background = "${config.programs.matugen.theme.colors.background.default.color}";
+        foreground = "${config.programs.matugen.theme.colors.on_surface.default.color}";
+      };
+
+      cursor = {
+        text = "${config.programs.matugen.theme.colors.on_surface.default.color}";
+        cursor = "${config.programs.matugen.theme.colors.on_surface_variant.default.color}";
+      };
+
+      search = {
+        matches = {
+          background = "${config.programs.matugen.theme.colors.tertiary.default.color}";
+          foreground = "${config.programs.matugen.theme.colors.surface_variant.default.color}";
+        };
+
+        focused_match = {
+          background = "${config.programs.matugen.theme.colors.primary.default.color}";
+          foreground = "${config.programs.matugen.theme.colors.surface_variant.default.color}";
+        };
+      };
+
+      footer_bar = {
+        background = "${config.programs.matugen.theme.colors.inverse_surface.default.color}";
+        foreground = "${config.programs.matugen.theme.colors.surface_variant.default.color}";
+      };
+
+      hints = {
+        start = {
+          background = "${config.programs.matugen.theme.colors.secondary.default.color}";
+          foreground = "${config.programs.matugen.theme.colors.surface_variant.default.color}";
+        };
+
+        end = {
+          background = "${config.programs.matugen.theme.colors.secondary.default.color}";
+          foreground = "${config.programs.matugen.theme.colors.surface_variant.default.color}";
+        };
+      };
+
+      selection = {
+        text = "${config.programs.matugen.theme.colors.background.default.color}";
+        background = "${config.programs.matugen.theme.colors.primary.default.color}";
+      };
+
+      normal = {
+        black = "#181818";
+        red = "${config.programs.matugen.theme.colors.error.default.color}";
+        green = "${config.programs.matugen.theme.colors.primary.default.color}";
+        yellow = "${config.programs.matugen.theme.colors.inverse_primary.default.color}";
+        blue = "${config.programs.matugen.theme.colors.primary.default.color}";
+        magenta = "${config.programs.matugen.theme.colors.tertiary.default.color}";
+        cyan = "${config.programs.matugen.theme.colors.secondary.default.color}";
+        white = "#bac2de";
+      };
+
+      bright = {
+        black = "#585B70";
+        red = "#F38BA8";
+        green = "#A6E3A1";
+        yellow = "#F9E2AF";
+        blue = "#89B4FA";
+        magenta = "#F5C2E7";
+        cyan = "#94E2D5";
+        white = "#A6ADC8";
+      };
+
+      dim = {
+        black = "#45475A";
+        red = "#F38BA8";
+        green = "#A6E3A1";
+        yellow = "#F9E2AF";
+        blue = "#89B4FA";
+        magenta = "#F5C2E7";
+        cyan = "#94E2D5";
+        white = "#BAC2DE";
+      };
+    };
   };
 }
