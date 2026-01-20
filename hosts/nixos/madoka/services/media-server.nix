@@ -275,7 +275,7 @@ lib.mkMerge [
           network."tailnet" = {};
         };
         "tailscale" = {
-          image = "ghcr.io/tailscale/tailscale:latest";
+          image = "tailscale/tailscale:latest";
           # image = "nginx";
           environment = {
             "TS_ACCEPT_DNS" = "1";
