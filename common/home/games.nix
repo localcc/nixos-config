@@ -26,6 +26,7 @@ in
     })
     mangohud
     umu-launcher
+    heroic
     (lutris.override {
       extraLibraries = pkgs: [
       ];
