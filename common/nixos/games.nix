@@ -102,15 +102,6 @@ in
     #   package = unstable.gamescope;
     #   # capSysNice = true;
     # };
-    services.ananicy = {
-      enable = true;
-      extraRules = [
-        {
-          name = "gamescope";
-          nice = -20;
-        }
-      ];
-    };
 
     environment.sessionVariables = {
       STEAM_EXTRA_COMPAT_TOOLS_PATHS = "\${HOME}/.steam/root/compatibilitytools.d";
