@@ -13,7 +13,7 @@ let
   noctalia =
     cmd:
     [
-      "noctalia-shell"
+      "noctalia"
       "ipc"
       "call"
     ]
@@ -88,12 +88,12 @@ in
 
       "Mod+D" = {
         hotkey-overlay.title = "Run an Application";
-        action.spawn = noctalia "launcher toggle";
+        action.spawn = noctalia "panel-toggle launcher";
       };
 
       "Mod+L" = {
         hotkey-overlay.title = "Lock the Screen";
-        action.spawn = noctalia "lockScreen lock";
+        action.spawn = noctalia "session lock";
       };
 
       "XF86AudioRaiseVolume" = {
@@ -145,126 +145,126 @@ in
     niri.animations = { };
 
     niri.spawn-at-startup = [
-      { argv = [ "noctalia-shell" ]; }
+      { argv = [ "noctalia" ]; }
     ];
 
-    programs.noctalia-shell = {
+    programs.noctalia = {
       enable = true;
       systemd.enable = false;
-      settings = {
-        general = {
-          avatarImage = cfg.pfp;
-        };
-        colorSchemes = {
-          darkMode = true;
-          generateTemplatesForPredefined = true;
-          matugenSchemeType = matugenSchemeType;
-          predefinedScheme = "Noctalia (default)";
-          useWallpaperColors = true;
-        };
-        location = {
-          monthBeforeDay = false;
-          name = "Prague, Czechia";
-        };
-        wallpaper = {
-          enabled = true;
-          setWallpaperOnAllMonitors = true;
-          directory = cfg.wallpaper + "/../";
-          fillMode = "crop";
-        };
-        appLauncher = {
-          enableClipboardHistory = true;
-          terminalCommand = "alacritty -e";
-        };
-        sessionMenu = {
-          enableCountdown = true;
-          countdownDuration = 5000;
-        };
-        controlCenter = {
-          position = "close_to_bar_button";
-          shortcuts = {
-            left = [
-              {
-                id = "WiFi";
-              }
-              {
-                id = "Bluetooth";
-              }
-              {
-                id = "PowerProfile";
-              }
-              {
-                id = "KeepAwake";
-              }
-            ];
-            right = [ ];
-          };
-        };
-        bar = {
-          density = "compact";
-          position = "right";
-          backgroundOpacity = 0.5;
-          widgets = {
-            left = [
-              {
-                id = "ControlCenter";
-                useDistroLogo = true;
-              }
-              {
-                id = "NotificationHistory";
-              }
-              {
-                id = "plugin:catwalk";
-              }
-            ];
-            center = [
-              {
-                hideUnoccupied = false;
-                id = "Workspace";
-                labelMode = "none";
-              }
-            ];
-            right = [
-              {
-                id = "Tray";
-                drawerEnabled = false;
-              }
-              {
-                id = "WiFi";
-              }
-              {
-                id = "Bluetooth";
-              }
-            ]
-            ++ battery
-            ++ [
-              {
-                id = "KeyboardLayout";
-                displayMode = "forceOpen";
-              }
-              {
-                formatHorizontal = "HH:mm";
-                formatVertical = "HH mm";
-                id = "Clock";
-                useMonospacedFont = true;
-                usePrimaryColor = true;
-              }
-            ];
-          };
-        };
-        templates = {
-          gtk = true;
-          qt = true;
-          niri = true;
-        };
-        idle = {
-          enabled = true;
-          screenOffTimeout = 600;
-          lockTimeout = 660;
-          suspendTimeout = 1800;
-          fadeDuration = 5;
-        };
-      };
+      # settings = {
+      #   general = {
+      #     avatarImage = cfg.pfp;
+      #   };
+      #   colorSchemes = {
+      #     darkMode = true;
+      #     generateTemplatesForPredefined = true;
+      #     matugenSchemeType = matugenSchemeType;
+      #     predefinedScheme = "Noctalia (default)";
+      #     useWallpaperColors = true;
+      #   };
+      #   location = {
+      #     monthBeforeDay = false;
+      #     name = "Prague, Czechia";
+      #   };
+      #   wallpaper = {
+      #     enabled = true;
+      #     setWallpaperOnAllMonitors = true;
+      #     directory = cfg.wallpaper + "/../";
+      #     fillMode = "crop";
+      #   };
+      #   appLauncher = {
+      #     enableClipboardHistory = true;
+      #     terminalCommand = "alacritty -e";
+      #   };
+      #   sessionMenu = {
+      #     enableCountdown = true;
+      #     countdownDuration = 5000;
+      #   };
+      #   controlCenter = {
+      #     position = "close_to_bar_button";
+      #     shortcuts = {
+      #       left = [
+      #         {
+      #           id = "WiFi";
+      #         }
+      #         {
+      #           id = "Bluetooth";
+      #         }
+      #         {
+      #           id = "PowerProfile";
+      #         }
+      #         {
+      #           id = "KeepAwake";
+      #         }
+      #       ];
+      #       right = [ ];
+      #     };
+      #   };
+      #   bar = {
+      #     density = "compact";
+      #     position = "right";
+      #     backgroundOpacity = 0.5;
+      #     widgets = {
+      #       left = [
+      #         {
+      #           id = "ControlCenter";
+      #           useDistroLogo = true;
+      #         }
+      #         {
+      #           id = "NotificationHistory";
+      #         }
+      #         {
+      #           id = "plugin:catwalk";
+      #         }
+      #       ];
+      #       center = [
+      #         {
+      #           hideUnoccupied = false;
+      #           id = "Workspace";
+      #           labelMode = "none";
+      #         }
+      #       ];
+      #       right = [
+      #         {
+      #           id = "Tray";
+      #           drawerEnabled = false;
+      #         }
+      #         {
+      #           id = "WiFi";
+      #         }
+      #         {
+      #           id = "Bluetooth";
+      #         }
+      #       ]
+      #       ++ battery
+      #       ++ [
+      #         {
+      #           id = "KeyboardLayout";
+      #           displayMode = "forceOpen";
+      #         }
+      #         {
+      #           formatHorizontal = "HH:mm";
+      #           formatVertical = "HH mm";
+      #           id = "Clock";
+      #           useMonospacedFont = true;
+      #           usePrimaryColor = true;
+      #         }
+      #       ];
+      #     };
+      #   };
+      #   templates = {
+      #     gtk = true;
+      #     qt = true;
+      #     niri = true;
+      #   };
+      #   idle = {
+      #     enabled = true;
+      #     screenOffTimeout = 600;
+      #     lockTimeout = 660;
+      #     suspendTimeout = 1800;
+      #     fadeDuration = 5;
+      #   };
+      # };
     };
 
     home.file.".cache/noctalia/wallpapers.json" = {
