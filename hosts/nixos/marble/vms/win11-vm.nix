@@ -95,16 +95,11 @@ let
   '';
 
   startScript = ''
-    VM_MEMORY=${builtins.toString memSizeKib}
-    ## Calculate number of hugepages to allocate from memory (in MB)
-    HUGEPAGES="$(($VM_MEMORY/$(($(grep Hugepagesize /proc/meminfo | ${pkgs.gawk}/bin/awk '{print $2}')))))"
-    ${lib.fileContents ./scripts/alloc_hugepages.sh}
     ${setGovernor vmGovernor vmPowerProfile}
     ${isolateThreads vmIsolatedThreads}
   '';
 
   stopScript = ''
-    ${lib.fileContents ./scripts/free_hugepages.sh}
     ${setGovernor normalGovernor normalPowerProfile}
     ${isolateThreads normalHostThreads}
   '';
@@ -338,9 +333,9 @@ in
           count = memSizeKib;
           unit = "KiB";
         };
-        memoryBacking = {
-          hugepages = { };
-        };
+        # memoryBacking = {
+        #   hugepages = { };
+        # };
         os = {
           type = "hvm";
           arch = "x86_64";
