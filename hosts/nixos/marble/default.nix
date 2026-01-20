@@ -10,7 +10,7 @@ let
   isodir = "${vmdir}/isos";
 
   win11-vmdir = "${vmdir}/win11";
-  win11-vmpart = "/dev/nvme0n1p3";
+  win11-vmpart = "/dev/nvme0n1p4";
 
   vmdirs = [
     isodir
