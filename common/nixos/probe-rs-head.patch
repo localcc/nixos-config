@@ -1,0 +1,90 @@
+diff --git a/probe-rs/src/flashing/erase.rs b/probe-rs/src/flashing/erase.rs
+index 46dc6e37..0d09b2d2 100644
+--- a/probe-rs/src/flashing/erase.rs
++++ b/probe-rs/src/flashing/erase.rs
+@@ -55,7 +55,20 @@ pub fn erase_all(
+ 
+         let target = session.target();
+         let core = target.core_index_by_name(core_name).unwrap();
+-        let algo = FlashLoader::get_flash_algorithm_for_region(&region, target, core_name, &[])?;
++        let algo = match FlashLoader::get_flash_algorithm_for_region(&region, target, core_name, &[])
++        {
++            Ok(algo) => algo,
++            Err(FlashError::NoFlashLoaderAlgorithmAttached { .. }) => {
++                // Regions without a linked algorithm (e.g. OTP) cannot be
++                // erased by the flash loader, so leave them alone.
++                tracing::warn!(
++                    "Skipping flash region {:#010x?}: no flash loader algorithm is linked to it.",
++                    region.range
++                );
++                continue;
++            }
++            Err(error) => return Err(error),
++        };
+ 
+         tracing::debug!("     -- using algorithm: {}", algo.name);
+         if let Some(entry) = algos.iter_mut().find(|entry| {
+diff --git a/probe-rs/src/probe/xvc/mod.rs b/probe-rs/src/probe/xvc/mod.rs
+index aaa1a469..9f772757 100644
+--- a/probe-rs/src/probe/xvc/mod.rs
++++ b/probe-rs/src/probe/xvc/mod.rs
+@@ -81,7 +81,7 @@ impl ProbeFactory for XvcFactory {
+             && selector.vendor_id == XVC_VID
+             && selector.product_id == XVC_PID
+             && let Some(address) = selector.serial_number.clone()
+-            && !address.is_empty()
++            && is_xvc_address(&address)
+         {
+             return vec![ProbeListItem::accessible(DebugProbeInfo {
+                 identifier: "XVC".to_string(),
+@@ -98,6 +98,50 @@ impl ProbeFactory for XvcFactory {
+     }
+ }
+ 
++/// Returns `true` if `serial` looks like an XVC server address
++/// (`<host>` or `<host>:<port>`, IPv6 optionally bracketed).
++///
++/// Other probe types that have no USB identity (e.g. the Linux GPIO
++/// bit-bang probe) share the `0000:0000` placeholder ID, so a non-address
++/// serial must not be claimed by the XVC factory.
++fn is_xvc_address(serial: &str) -> bool {
++    // Drop a trailing numeric port, except for bracketed IPv6 literals.
++    let host = if serial.contains('[') {
++        serial
++    } else if let Some((host, port)) = serial.rsplit_once(':') {
++        if !port.bytes().all(|b| b.is_ascii_digit()) {
++            return false;
++        }
++        host
++    } else {
++        serial
++    };
++    !host.is_empty()
++        && host
++            .bytes()
++            .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'.' | b'-' | b'_' | b'[' | b']' | b':'))
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    #[test]
++    fn xvc_address_accepts_hosts_and_ports() {
++        for address in ["localhost", "192.168.1.123", "192.168.1.123:2542", "[::1]:2542"] {
++            assert!(is_xvc_address(address), "{address} should be an address");
++        }
++    }
++
++    #[test]
++    fn xvc_address_rejects_non_addresses() {
++        // e.g. a Linux GPIO bit-bang pin map, which also selects via 0000:0000
++        for address in ["", "gpiochip1,swclk=26,swdio=25,srst=31", "host:not-a-port"] {
++            assert!(!is_xvc_address(address), "{address} is not an address");
++        }
++    }
++}
++
+ /// An XVC (Xilinx Virtual Cable) debug probe.
+ #[derive(Debug)]
+ pub struct XvcProbe {
