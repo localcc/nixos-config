@@ -13,6 +13,12 @@
       url = "github:schembriaiden/helium-browser-nix-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    
+    proton-cachyos = {
+      url = "github:powerofthe69/proton-cachyos-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     gpu-switcher = {
       url = "github:localcc/gpu-switcher";
       inputs.nixpkgs.follows = "nixpkgs";

@@ -8,6 +8,7 @@
     inputs.agenix.overlays.default
     inputs.rust-overlay.overlays.default
     inputs.niri.overlays.niri
+    inputs.proton-cachyos.overlays.default
     inputs.helium.overlays.default
   ];
 

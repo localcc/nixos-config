@@ -311,6 +311,11 @@ in
 
   hardware.graphics.enable = true;
   hardware.graphics.extraPackages = [ pkgs.libva-vdpau-driver ];
+  hardware.opengl.enable = true;
+  hardware.graphics.extraPackages = [
+    pkgs.libva-vdpau-driver
+    pkgs.mesa.opencl
+  ];
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = true;

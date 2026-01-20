@@ -31,6 +31,61 @@ in
     # Steam
     programs.steam = {
       enable = true;
+      extraCompatPackages = with pkgs; [ proton-cachyos-x86_64_v3 ];
+      package = pkgs.steam.override {
+        extraPkgs =
+          pkgs': with pkgs'; [
+            gamemode # keep this
+            
+            meson
+            pkg-config
+            ninja
+            wayland-scanner
+
+            # For OpenVR
+            cmake
+            glslang
+
+            # For `libdisplay-info`
+            python3
+            hwdata
+            v4l-utils
+
+            pipewire
+            hwdata
+            xorg.libX11
+            xorg.libxcb
+            wayland
+            wayland-protocols
+            vulkan-loader
+            vulkan-headers
+            vulkan-tools
+
+            xorg.libXcomposite
+            xorg.libXcursor
+            xorg.libXdamage
+            xorg.libXext
+            xorg.libXi
+            xorg.libXmu
+            xorg.libXrender
+            xorg.libXres
+            xorg.libXtst
+            xorg.libXxf86vm
+            libavif
+            libdrm
+            libei
+            SDL2
+            libdecor
+            libinput
+            libxkbcommon
+            gbenchmark
+            pixman
+            libcap
+            lcms
+            luajit
+
+          ];
+      };
       localNetworkGameTransfers.openFirewall = true;
       # package = unstable.steam;
       gamescopeSession.enable = true;
@@ -41,6 +96,7 @@ in
       # };
     };
     programs.gamemode.enable = true;
+    # programs.gamescope.package = unstable.gamescope;
     # programs.gamescope = {
     #   enable = true;
     #   package = unstable.gamescope;

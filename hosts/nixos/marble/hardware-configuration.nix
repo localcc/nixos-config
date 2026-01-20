@@ -25,8 +25,7 @@
   boot.extraModulePackages = [
     config.boot.kernelPackages.zenpower
   ];
-  boot.blacklistedKernelModules = [ "k10temp" ];
-  boot.kernelModules = [ "kvm-amd" "zenpower" ];
+  boot.kernelModules = [ "kvm-amd" "zenpower" "k10temp" ];
   boot.kernelParams = [
     "amd_iommu=on"
     "nvidia.NVreg_RegistryDwords=EnableBrightnessControl=1"
