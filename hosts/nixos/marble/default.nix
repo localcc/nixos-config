@@ -215,6 +215,10 @@ in
           path = "/home/kate/dev";
           devices = [ "kate_madoka" "cider" ];
         };
+        "opencode" = {
+          path = "/home/kate/.local/share/opencode";
+          devices = [ "kate_madoka" ];
+        };
       };
 
       xdg.portal = {
