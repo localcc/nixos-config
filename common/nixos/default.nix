@@ -15,6 +15,7 @@
     ./sound.nix
     ./desktop.nix
     ./containers.nix
+    ./games.nix
     inputs.blackwall.nixosModules.default
   ];
 

@@ -41,6 +41,7 @@ in
   niri.enable = true;
   desktop.enable = true;
   wifi.enable = true;
+  games.enable = true;
 
   environment.sessionVariables = {
     __EGL_VENDOR_LIBRARY_FILENAMES = "${pkgs.mesa}/share/glvnd/egl_vendor.d/50_mesa.json";
@@ -264,11 +265,6 @@ in
     };
   };
 
-  # Steam
-  programs.steam = {
-    enable = true;
-    localNetworkGameTransfers.openFirewall = true;
-  };
 
   environment.systemPackages = with pkgs; [
     inputs.nsight-graphics.packages.${system}.default
