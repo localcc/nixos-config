@@ -25,12 +25,18 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
       protonup-ng
+      protonup-qt
+      xdotool
+      xwininfo
+      xxd
+      yad
       inputs.gamescope-launcher.packages.${system}.default
     ];
 
     # Steam
     programs.steam = {
       enable = true;
+      protontricks.enable = true;
       extraCompatPackages = with pkgs; [ proton-cachyos-x86_64_v3 ];
       package = pkgs.steam.override {
         extraPkgs =
