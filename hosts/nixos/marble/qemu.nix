@@ -22,6 +22,7 @@ in
 
   environment.systemPackages = with pkgs; [
     looking-glass-client
+    dnsmasq
   ];
 
   virtualisation.libvirt = {
@@ -60,6 +61,7 @@ in
       ];
     };
   };
+  networking.firewall.trustedInterfaces = [ "virbr0" ];
 
   virtualisation.libvirtd =
     with pkgs;
@@ -67,7 +69,7 @@ in
       unstable = import inputs.nixpkgs-unstable { inherit system; };
     in
     {
-      package = unstable.libvirt;
+      package = libvirt;
       enable = true;
       qemu = {
         package = unstable.qemu;
