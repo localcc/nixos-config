@@ -180,7 +180,7 @@ in
           behavior = "own";
           backend = "ssh";
           key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEHWfBIxvY4c0Rdava/cAEa3qGUOxMSt4Cu0Ap7RtSK7";
-          backends.ssh.program = lib.getExe' pkgs._1password-gui "op-ssh-sign";
+          backends.ssh.program = if pkgs.stdenv.isDarwin then ("/Applications/1Password.app/Contents/MacOS/op-ssh-sign") else lib.getExe' pkgs._1password-gui "op-ssh-sign";
         };
 
         git = {

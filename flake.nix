@@ -6,6 +6,12 @@
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-fork.url = "github:localcc/nixpkgs/unifi-datadir";
     nixpkgs-graalvm.url = "github:localcc/nixpkgs/graalvm";
+
+    nix-darwin = {
+      url = "github:nix-darwin/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    
     blackwall.url = "github:localcc/blackwall";
 
     ghelper = {
@@ -26,7 +32,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    
     proton-cachyos = {
       url = "github:powerofthe69/proton-cachyos-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -144,6 +149,7 @@
         let
           builder =
             if system == "darwin" then inputs.nix-darwin.lib.darwinSystem else inputs.nixpkgs.lib.nixosSystem;
+          homeManager = if system == "darwin" then inputs.home-manager.darwinModules.home-manager else inputs.home-manager.nixosModules.home-manager;
           config = builder {
             specialArgs = { inherit inputs hostList; };
             modules = [
@@ -151,9 +157,9 @@
               ./common
               ./common/${system}
               { config._module.args = { inherit hostname; }; }
-              inputs.home-manager.nixosModules.home-manager
+              homeManager
               {
-                home-manager.extraSpecialArgs = { inherit inputs; };
+                home-manager.extraSpecialArgs = { inherit inputs hostname; };
                 home-manager.useGlobalPkgs = true;
                 home-manager.useUserPackages = true;
                 home-manager.backupFileExtension = "bak";

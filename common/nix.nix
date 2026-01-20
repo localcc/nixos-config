@@ -15,8 +15,10 @@
   # auto gc
   nix.gc = {
     automatic = true;
-    persistent = true;
-    dates = "weekly";
+    # not sure if this works on non darwin
+    # persistent = true;
+    # TODO: convert to interval for darwin
+    # dates = "weekly";
     options = "--delete-older-than 30d";
   };
 }
