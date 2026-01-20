@@ -66,6 +66,7 @@ in
         installation = false;
       }
     ))
+    inputs.ghelper.nixosModules.default
     inputs.gpu-switcher.nixosModules.default
   ];
   kde.enable = true;
@@ -335,11 +336,12 @@ in
       enable = true;
       settings = {
         device_path = "0000:64:00.0";
+        hotplug_type = "Asus";
       };
     };
-    asusd = {
+    ghelper = {
       enable = true;
-      # enableUserService = true;
+      user = "kate";
     };
   };
 

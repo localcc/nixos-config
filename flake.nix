@@ -8,6 +8,10 @@
     nixpkgs-graalvm.url = "github:localcc/nixpkgs/graalvm";
     blackwall.url = "github:localcc/blackwall";
 
+    ghelper = {
+      url = "github:localcc/g-helper-linux?dir=nixos";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     sing = {
       url = "git+file:///home/kate/dev/nix-sing";
       inputs.nixpkgs.follows = "nixpkgs";
