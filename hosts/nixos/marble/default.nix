@@ -361,6 +361,27 @@ in
     };
   };
 
+  # Keep the dGPU (endpoint 0000:64:00.0, behind port 0000:00:03.1) from ever
+  # entering ASPM link states or runtime-suspending, so it doesn't fall off the
+  # bus during VFIO passthrough. Every other PCIe link keeps ASPM/port-PM (TLP
+  # still applies PCIE_ASPM_ON_BAT). Runs on hot-add too, since g-helper toggles
+  # dgpu_disable at runtime.
+  services.udev.extraRules = let
+    dgpuDisablePm = pkgs.writeShellScript "dgpu-disable-pm" ''
+      for s in l0s_aspm l1_aspm l1_1_aspm l1_2_aspm; do
+        f="/sys/bus/pci/devices/$1/link/$s"
+        [ -e "$f" ] && echo 0 > "$f"
+      done
+      f="/sys/bus/pci/devices/$1/power/control"
+      [ -e "$f" ] && echo on > "$f"
+      exit 0
+    '';
+  in ''
+    ACTION=="add", SUBSYSTEM=="pci", KERNEL=="0000:64:00.0", RUN+="${dgpuDisablePm} %k"
+    ACTION=="add", SUBSYSTEM=="pci", KERNEL=="0000:64:00.1", RUN+="${dgpuDisablePm} %k"
+    ACTION=="add", SUBSYSTEM=="pci", KERNEL=="0000:00:03.1", RUN+="${dgpuDisablePm} %k"
+    ACTION=="change", SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_TYPE}=="Mains", RUN+="${config.systemd.package}/bin/systemctl --no-block start syncthing-power.service"
+  '';
 
   environment.systemPackages = with pkgs; [
     efibootmgr

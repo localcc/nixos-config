@@ -29,7 +29,15 @@
   boot.kernelParams = [
     "amd_iommu=on"
     "nvidia.NVreg_RegistryDwords=EnableBrightnessControl=1"
+    # ASPM and PCIe port runtime-PM used to be disabled globally here
+    # ("pcie_aspm=off" "pcie_port_pm=off") so the dGPU wouldn't fall off the
+    # bus while passed through. That also killed power management on every
+    # other link. Now scoped to the dGPU's port/endpoint via udev in
+    # hosts/nixos/marble/default.nix.
   ];
+  boot.extraModprobeConfig = ''
+    options vfio-pci disable_vga=1 disable_idle_d3=1
+  '';
   boot.kernelPatches = [
     {
       name = "dgpu-runtime-enable";
