@@ -329,17 +329,19 @@
       },
       "locked": {
         "dir": "nixos",
-        "lastModified": 1787476252,
-        "narHash": "sha256-jlyAVHgfsDJvoPe6CZQ9T5nKzKVj2E0woc8ZYtdErBg=",
-        "rev": "d993c8d0d020dabae6bfce460a7651bad3dd2183",
-        "revCount": 337,
-        "type": "git",
-        "url": "file:///home/kate/dev/g-helper-linux"
+        "lastModified": 1787496569,
+        "narHash": "sha256-8rg5nkztX3zkGH/KEgGfLV37Sxfu4M/Ga5xZ0P/crRs=",
+        "owner": "localcc",
+        "repo": "g-helper-linux",
+        "rev": "bdddcf63d8e90951861bd5fb8aef6f0daafda654",
+        "type": "github"
       },
       "original": {
         "dir": "nixos",
-        "type": "git",
-        "url": "file:///home/kate/dev/g-helper-linux"
+        "owner": "localcc",
+        "ref": "fix-nix-build",
+        "repo": "g-helper-linux",
+        "type": "github"
       }
     },
     "git-hooks-nix": {
@@ -1144,16 +1146,17 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1787482683,
-        "narHash": "sha256-cdKP2LMz6iGqS3JNXD5eFklNoZ9m0K/VSXG4eL2IUBo=",
-        "rev": "5a74fae190e757c754395f44d18d794a406006db",
-        "revCount": 7,
+        "lastModified": 1787490136,
+        "narHash": "sha256-MqD74H8xuRSpx/CRjkx6s/G2vulEZOwku6A0RxjzzuM=",
+        "ref": "refs/heads/main",
+        "rev": "1a77b5b8993e98895b3022aac6f1d1ed2d040ced",
+        "revCount": 5,
         "type": "git",
-        "url": "file:///home/kate/dev/nixos-config-secrets"
+        "url": "ssh://forgejo@ssh-git.madoka.dev:2222/localcc/nixos-config-secrets.git"
       },
       "original": {
         "type": "git",
-        "url": "file:///home/kate/dev/nixos-config-secrets"
+        "url": "ssh://forgejo@ssh-git.madoka.dev:2222/localcc/nixos-config-secrets.git"
       }
     },
     "sing": {
@@ -1163,16 +1166,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1778956142,
-        "narHash": "sha256-GYR15o6Q6Yds6p2gZ8zwjEcn+wbXf/g+NLjLCElNtmw=",
-        "rev": "f2c61a8e1d27e7f002cc6dc0556dafe401b77765",
-        "revCount": 1,
-        "type": "git",
-        "url": "file:///home/kate/dev/nix-sing"
+        "lastModified": 1787486667,
+        "narHash": "sha256-b4FHjNYNGq0HimyCCMmS6mn3C+z0iIq8zQVyGl/tuQ8=",
+        "owner": "localcc",
+        "repo": "nix-sing",
+        "rev": "a8acec4ac912bec6a77f42673865764c62527e38",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "file:///home/kate/dev/nix-sing"
+        "owner": "localcc",
+        "repo": "nix-sing",
+        "type": "github"
       }
     },
     "stable": {

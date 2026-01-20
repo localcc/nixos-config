@@ -9,7 +9,8 @@
     blackwall.url = "github:localcc/blackwall";
 
     ghelper = {
-      url = "github:localcc/g-helper-linux?dir=nixos";
+      # url = "github:utajum/g-helper-linux?dir=nixos";
+      url = "github:localcc/g-helper-linux/fix-nix-build?dir=nixos";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     sing = {
