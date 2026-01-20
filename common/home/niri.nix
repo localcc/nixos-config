@@ -16,49 +16,49 @@ in
       binds = lib.mkOption {
         type = lib.types.attrsOf lib.types.anything;
         description = "Additional niri keybindings";
-        default = {};
+        default = { };
       };
 
       touchpad = lib.mkOption {
         type = lib.types.attrsOf lib.types.anything;
         description = "Additional touchpad settings";
-        default = {};
+        default = { };
       };
 
       outputs = lib.mkOption {
         type = lib.types.attrsOf lib.types.anything;
         description = "Outputs settings";
-        default = {};
+        default = { };
       };
 
       spawn-at-startup = lib.mkOption {
         type = lib.types.listOf (lib.types.attrsOf lib.types.anything);
         description = "SH files to start at startup";
-        default = [];
+        default = [ ];
       };
 
       animations = lib.mkOption {
         type = lib.types.attrsOf lib.types.anything;
         description = "Animation settings";
-        default = {};
+        default = { };
       };
 
       layout = lib.mkOption {
         type = lib.types.attrsOf lib.types.anything;
         description = "Additional layout settings";
-        default = {};
+        default = { };
       };
 
       debug = lib.mkOption {
         type = lib.types.attrsOf lib.types.anything;
         description = "Debug settings";
-        default = {};
+        default = { };
       };
 
       switch-events = lib.mkOption {
         type = lib.types.attrsOf lib.types.anything;
         description = "Lid switch events";
-        default = {};
+        default = { };
       };
     };
   };
@@ -161,7 +161,7 @@ in
         };
 
         mouse = {
-          accel-speed = -0.5;
+          accel-speed = -0.8;
         };
 
         touchpad = {
