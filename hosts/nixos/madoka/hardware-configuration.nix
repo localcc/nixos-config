@@ -11,6 +11,7 @@
     "usb_storage"
     "usbhid"
   ];
+  boot.supportedFilesystems = [ "ntfs" ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.kernelParams = [
     "amd_iommu=on"
