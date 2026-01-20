@@ -80,10 +80,6 @@ in
         action.spawn = noctalia "lockScreen lock";
       };
 
-      "Mod+T" = {
-        action.spawn = "rio";
-      };
-
       "XF86AudioRaiseVolume" = {
         allow-when-locked = true;
         action.spawn = noctalia "volume increase";
@@ -161,7 +157,7 @@ in
         };
         appLauncher = {
           enableClipboardHistory = true;
-          terminalCommand = "rio -e";
+          terminalCommand = "alacritty -e";
         };
         sessionMenu = {
           enableCountdown = true;
