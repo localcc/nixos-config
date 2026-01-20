@@ -174,6 +174,7 @@ in
         ../../../common/home/games.nix
         ../../../common/home/atuin.nix
         ../../../common/home/zellij.nix
+        ../../../common/home/alacritty.nix
         ./audio.nix
       ];
 
