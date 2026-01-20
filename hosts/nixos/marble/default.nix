@@ -220,7 +220,7 @@ in
       };
 
       # do not remove
-      home.stateVersion = "25.11";
+      home.stateVersion = "26.05";
     };
   programs._1password-gui = {
     polkitPolicyOwners = [ "kate" ];
