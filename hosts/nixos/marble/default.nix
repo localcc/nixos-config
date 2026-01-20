@@ -307,7 +307,64 @@ in
 
       CPU_BOOST_ON_AC = 1;
       CPU_BOOST_ON_BAT = 0;
+
+      WIFI_PWR_ON_BAT = "on";
+      SOUND_POWER_SAVE_ON_BAT = 1;
+      USB_AUTOSUSPEND = 1;
+      NMI_WATCHDOG = 0;
+
+      START_CHARGE_THRESH_BAT0 = 80;
+      STOP_CHARGE_THRESH_BAT0 = 80;
     };
+  };
+
+  # Pause Syncthing folders while on battery and restore only the ones that were
+  # running before unplugging (folders paused by hand stay paused).
+  systemd.services.syncthing-power = {
+    description = "Pause/resume Syncthing folders on AC/battery";
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      User = "kate";
+      Group = "users";
+      StateDirectory = "syncthing-power";
+      Environment = [
+        "HOME=/home/kate"
+        "XDG_RUNTIME_DIR=/run/user/1000"
+      ];
+    };
+    path = [ pkgs.syncthing ];
+    script = ''
+      state="$STATE_DIRECTORY/paused-on-battery"
+
+      on_ac=1
+      for d in /sys/class/power_supply/*/; do
+        if [ "$(cat "$d/type" 2>/dev/null)" = "Mains" ]; then
+          on_ac=$(cat "$d/online" 2>/dev/null)
+        fi
+      done
+
+      folders=$(syncthing cli config folders list) || exit 0
+
+      if [ "$on_ac" = "0" ]; then
+        : > "$state"
+        for id in $folders; do
+          if [ "$(syncthing cli config folders "$id" paused get)" = "false" ]; then
+            echo "$id" >> "$state"
+          fi
+          syncthing cli config folders "$id" paused set true >/dev/null
+        done
+      else
+        [ -e "$state" ] || exit 0
+        while read -r id; do
+          if [ -n "$id" ]; then
+            syncthing cli config folders "$id" paused set false >/dev/null
+          fi
+        done < "$state"
+        rm -f "$state"
+      fi
+    '';
+  };
   };
 
   # GPU
