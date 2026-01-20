@@ -317,8 +317,8 @@ in
         };
 
         "Mod+Left".action.focus-column-left = { };
-        "Mod+Down".action.focus-window-down = { };
-        "Mod+Up".action.focus-window-up = { };
+        "Mod+Down".action.focus-window-or-workspace-down = { };
+        "Mod+Up".action.focus-window-or-workspace-up = { };
         "Mod+Right".action.focus-column-right = { };
 
         "Mod+Ctrl+Left".action.move-column-left = { };
