@@ -1,6 +1,5 @@
 {
   pkgs,
-  inputs,
   ...
 }:
 {
@@ -18,6 +17,7 @@
     ./sound.nix
     ./supergfxd.nix
     ./desktop.nix
+    ./containers.nix
   ];
 
   # boot
