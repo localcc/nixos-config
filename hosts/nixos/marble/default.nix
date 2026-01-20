@@ -137,6 +137,12 @@ in
     owner = "kate";
     mode = "600";
   };
+  age.secrets.kate-git-smtp = {
+    file = (inputs.secrets + /kate-git-smtp.age);
+    owner = "kate";
+    mode = "600";
+  };
+  
   home-manager.users.kate =
     { lib, ... }:
     {
@@ -145,6 +151,7 @@ in
         ../../../common/home/niri.nix
         ../../../common/home/niri-noctalia.nix
         ../../../common/home/jj.nix
+        ../../../common/home/git.nix
         ../../../common/home/helix.nix
         ../../../common/home/games.nix
         ../../../common/home/atuin.nix
@@ -157,6 +164,10 @@ in
       );
 
       jj.enable = true;
+      git = {
+        enable = true;
+        smtp = config.age.secrets.kate-git-smtp.path;
+      };
       helix.enable = true;
       home.packages = with pkgs; [
         unstable.devenv
