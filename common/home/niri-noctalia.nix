@@ -117,29 +117,29 @@ in
     niri.layout = {
       focus-ring = {
         width = 1;
-        active.color = "${config.programs.matugen.theme.colors.primary.default.color}";
-        inactive.color = "${config.programs.matugen.theme.colors.surface.default.color}";
-        urgent.color = "${config.programs.matugen.theme.colors.error.default.color}";
+        active.color = "#${config.programs.matugen.theme.colors.primary.default.color}";
+        inactive.color = "#${config.programs.matugen.theme.colors.surface.default.color}";
+        urgent.color = "#${config.programs.matugen.theme.colors.error.default.color}";
       };
 
       border = {
-        active.color = "${config.programs.matugen.theme.colors.primary.default.color}";
-        inactive.color = "${config.programs.matugen.theme.colors.surface.default.color}";
-        urgent.color = "${config.programs.matugen.theme.colors.error.default.color}";
+        active.color = "#${config.programs.matugen.theme.colors.primary.default.color}";
+        inactive.color = "#${config.programs.matugen.theme.colors.surface.default.color}";
+        urgent.color = "#${config.programs.matugen.theme.colors.error.default.color}";
       };
 
       shadow = {
-        color = "${config.programs.matugen.theme.colors.shadow.default.color}70";
+        color = "#${config.programs.matugen.theme.colors.shadow.default.color}70";
       };
 
       tab-indicator = {
-        active.color = "${config.programs.matugen.theme.colors.primary.default.color}";
-        inactive.color = "${config.programs.matugen.theme.colors.primary_container.default.color}";
-        urgent.color = "${config.programs.matugen.theme.colors.error.default.color}";
+        active.color = "#${config.programs.matugen.theme.colors.primary.default.color}";
+        inactive.color = "#${config.programs.matugen.theme.colors.primary_container.default.color}";
+        urgent.color = "#${config.programs.matugen.theme.colors.error.default.color}";
       };
 
       insert-hint = {
-        display.color = "${config.programs.matugen.theme.colors.primary.default.color}80";
+        display.color = "#${config.programs.matugen.theme.colors.primary.default.color}80";
       };
     };
     niri.animations = { };
@@ -295,57 +295,57 @@ in
 
     programs.alacritty.settings.colors = {
       primary = {
-        background = "${config.programs.matugen.theme.colors.background.default.color}";
-        foreground = "${config.programs.matugen.theme.colors.on_surface.default.color}";
+        background = "#${config.programs.matugen.theme.colors.background.default.color}";
+        foreground = "#${config.programs.matugen.theme.colors.on_surface.default.color}";
       };
 
       cursor = {
-        text = "${config.programs.matugen.theme.colors.on_surface.default.color}";
-        cursor = "${config.programs.matugen.theme.colors.on_surface_variant.default.color}";
+        text = "#${config.programs.matugen.theme.colors.on_surface.default.color}";
+        cursor = "#${config.programs.matugen.theme.colors.on_surface_variant.default.color}";
       };
 
       search = {
         matches = {
-          background = "${config.programs.matugen.theme.colors.tertiary.default.color}";
-          foreground = "${config.programs.matugen.theme.colors.surface_variant.default.color}";
+          background = "#${config.programs.matugen.theme.colors.tertiary.default.color}";
+          foreground = "#${config.programs.matugen.theme.colors.surface_variant.default.color}";
         };
 
         focused_match = {
-          background = "${config.programs.matugen.theme.colors.primary.default.color}";
-          foreground = "${config.programs.matugen.theme.colors.surface_variant.default.color}";
+          background = "#${config.programs.matugen.theme.colors.primary.default.color}";
+          foreground = "#${config.programs.matugen.theme.colors.surface_variant.default.color}";
         };
       };
 
       footer_bar = {
-        background = "${config.programs.matugen.theme.colors.inverse_surface.default.color}";
-        foreground = "${config.programs.matugen.theme.colors.surface_variant.default.color}";
+        background = "#${config.programs.matugen.theme.colors.inverse_surface.default.color}";
+        foreground = "#${config.programs.matugen.theme.colors.surface_variant.default.color}";
       };
 
       hints = {
         start = {
-          background = "${config.programs.matugen.theme.colors.secondary.default.color}";
-          foreground = "${config.programs.matugen.theme.colors.surface_variant.default.color}";
+          background = "#${config.programs.matugen.theme.colors.secondary.default.color}";
+          foreground = "#${config.programs.matugen.theme.colors.surface_variant.default.color}";
         };
 
         end = {
-          background = "${config.programs.matugen.theme.colors.secondary.default.color}";
-          foreground = "${config.programs.matugen.theme.colors.surface_variant.default.color}";
+          background = "#${config.programs.matugen.theme.colors.secondary.default.color}";
+          foreground = "#${config.programs.matugen.theme.colors.surface_variant.default.color}";
         };
       };
 
       selection = {
-        text = "${config.programs.matugen.theme.colors.background.default.color}";
-        background = "${config.programs.matugen.theme.colors.primary.default.color}";
+        text = "#${config.programs.matugen.theme.colors.background.default.color}";
+        background = "#${config.programs.matugen.theme.colors.primary.default.color}";
       };
 
       normal = {
         black = "#181818";
-        red = "${config.programs.matugen.theme.colors.error.default.color}";
-        green = "${config.programs.matugen.theme.colors.primary.default.color}";
-        yellow = "${config.programs.matugen.theme.colors.inverse_primary.default.color}";
-        blue = "${config.programs.matugen.theme.colors.primary.default.color}";
-        magenta = "${config.programs.matugen.theme.colors.tertiary.default.color}";
-        cyan = "${config.programs.matugen.theme.colors.secondary.default.color}";
+        red = "#${config.programs.matugen.theme.colors.error.default.color}";
+        green = "#${config.programs.matugen.theme.colors.primary.default.color}";
+        yellow = "#${config.programs.matugen.theme.colors.inverse_primary.default.color}";
+        blue = "#${config.programs.matugen.theme.colors.primary.default.color}";
+        magenta = "#${config.programs.matugen.theme.colors.tertiary.default.color}";
+        cyan = "#${config.programs.matugen.theme.colors.secondary.default.color}";
         white = "#bac2de";
       };
 
