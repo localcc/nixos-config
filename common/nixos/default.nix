@@ -4,6 +4,8 @@
   ...
 }:
 {
+  disabledModules = [ "services/desktops/flatpak.nix" ];
+
   imports = [
     ./gnome.nix
     ./niri.nix
@@ -17,6 +19,7 @@
     ./containers.nix
     ./games.nix
     ./embedded.nix
+    ./flatpak
     inputs.blackwall.nixosModules.default
   ];
 
