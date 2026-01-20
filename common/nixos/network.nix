@@ -45,7 +45,7 @@ in
       networking.networkmanager.enable = true;
 
       # mdns
-      services.avahi.enable = lib.mkDefault false;
+      services.avahi.enable = lib.mkForce false;
       services.resolved.enable = true;
 
       # ssh

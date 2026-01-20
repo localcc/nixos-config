@@ -22,6 +22,7 @@ in
       displayManager.gdm.enable = true;
       desktopManager.gnome.enable = true;
     };
+    services.power-profiles-daemon.enable = lib.mkForce false;
 
     # remove gnome tour and web browser
     environment.gnome.excludePackages = [
