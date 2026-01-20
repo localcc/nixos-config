@@ -19,6 +19,7 @@
     ./containers.nix
     ./games.nix
     ./embedded.nix
+    ./kde.nix # fuckass hdr
     ./flatpak
     inputs.blackwall.nixosModules.default
   ];

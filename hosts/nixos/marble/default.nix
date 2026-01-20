@@ -39,7 +39,10 @@ in
 
   gdm.enable = true;
   niri.enable = true;
+  gnome.enable = true;
+  kde.enable = true;
   desktop.enable = true;
+  desktop.multi-de = true;
   wifi.enable = true;
   games.enable = true;
   embedded.enable = true;
@@ -131,6 +134,8 @@ in
         unityhub
       ];
 
+      # fuckass unity and xwayland-satellite
+      gnome.enable = true;
       niri = {
         enable = true;
         noctalia = true;

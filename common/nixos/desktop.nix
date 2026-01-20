@@ -11,7 +11,8 @@ in
 {
   options = {
     desktop = {
-      enable = lib.mkEnableOption "Desktop Deployment";  
+      enable = lib.mkEnableOption "Desktop Deployment";
+      multi-de = lib.mkEnableOption "Multi Desktop Environment deployment";
     };
   };
 
