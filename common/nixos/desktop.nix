@@ -25,6 +25,8 @@ in
       package = pkgs.mullvad-vpn;
     };
 
+    services.logind.settings.Login.HandleLidSwitch = "suspend";
+
     programs._1password.enable = true;
     programs._1password-gui.enable = true;
     programs.localsend.enable = true;
