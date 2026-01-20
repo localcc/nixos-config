@@ -204,6 +204,7 @@ in
           matches = [
             { app-id = "discord"; }
             { app-id = "org.telegram.desktop"; }
+            { app-id = "signal"; }
           ];
           open-on-workspace = "chat";
         }
@@ -229,6 +230,7 @@ in
         { argv = [ "microsoft-edge" ]; }
         { argv = [ "discord" ]; }
         { argv = [ "Telegram" ]; }
+        { argv = [ "signal-desktop" ]; }
       ]
       ++ cfg.spawn-at-startup;
 

@@ -67,6 +67,8 @@ in
         telegram-desktop
         unstable.zed-editor
         discord
+        signal-desktop
+
         # parsec-bin
         trayscale
         obsidian
