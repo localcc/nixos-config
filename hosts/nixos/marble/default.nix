@@ -125,6 +125,19 @@ in
           focus-at-startup = true;
         };
 
+        outputs."DP-2" = {
+          mode = {
+            width = 3440;
+            height = 1440;
+            refresh = 59.987;
+          };
+
+          position = {
+            x = -450;
+            y = 0;
+          };
+        };
+
         outputs."eDP-1" = {
           position = {
             x = 450;
