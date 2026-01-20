@@ -49,6 +49,15 @@ let
     system = pkgs.stdenv.system;
     config.allowUnfree = true;
   };
+
+  additionalPackages = lib.filter (e: e != null) [
+    (
+      if (builtins.elem "ida" (builtins.attrNames inputs)) then
+        inputs.ida.packages.${pkgs.stdenv.system}.default
+      else
+        null
+    )
+  ];
 in
 {
   imports = [
@@ -97,7 +106,6 @@ in
       defaultNetwork.settings.dns_enabled = true;
     };
   };
-
 
   networking.firewall.enable = false;
   blackwall.enable = true;
@@ -177,7 +185,7 @@ in
     owner = "kate";
     mode = "600";
   };
-  
+
   home-manager.users.kate =
     { lib, ... }:
     {
@@ -206,7 +214,6 @@ in
       };
       helix.enable = true;
       home.packages = with pkgs; [
-        inputs.ida.packages.${system}.default
         unstable.devenv
         slack
         virt-manager
@@ -215,17 +222,23 @@ in
         #   cudaSupport = true;
         # })
         unityhub
-      ];
+      ] ++ additionalPackages;
 
       syncthing = {
         enable = true;
         tray = pkgs.syncthingtray;
-        connectedDevices = [ "kate_madoka" "cider" ];
+        connectedDevices = [
+          "kate_madoka"
+          "cider"
+        ];
       };
       services.syncthing.settings.folders = {
         "dev" = {
           path = "/home/kate/dev";
-          devices = [ "kate_madoka" "cider" ];
+          devices = [
+            "kate_madoka"
+            "cider"
+          ];
         };
         "opencode" = {
           path = "/home/kate/.local/share/opencode";
@@ -457,22 +470,24 @@ in
   # bus during VFIO passthrough. Every other PCIe link keeps ASPM/port-PM (TLP
   # still applies PCIE_ASPM_ON_BAT). Runs on hot-add too, since g-helper toggles
   # dgpu_disable at runtime.
-  services.udev.extraRules = let
-    dgpuDisablePm = pkgs.writeShellScript "dgpu-disable-pm" ''
-      for s in l0s_aspm l1_aspm l1_1_aspm l1_2_aspm; do
-        f="/sys/bus/pci/devices/$1/link/$s"
-        [ -e "$f" ] && echo 0 > "$f"
-      done
-      f="/sys/bus/pci/devices/$1/power/control"
-      [ -e "$f" ] && echo on > "$f"
-      exit 0
+  services.udev.extraRules =
+    let
+      dgpuDisablePm = pkgs.writeShellScript "dgpu-disable-pm" ''
+        for s in l0s_aspm l1_aspm l1_1_aspm l1_2_aspm; do
+          f="/sys/bus/pci/devices/$1/link/$s"
+          [ -e "$f" ] && echo 0 > "$f"
+        done
+        f="/sys/bus/pci/devices/$1/power/control"
+        [ -e "$f" ] && echo on > "$f"
+        exit 0
+      '';
+    in
+    ''
+      ACTION=="add", SUBSYSTEM=="pci", KERNEL=="0000:64:00.0", RUN+="${dgpuDisablePm} %k"
+      ACTION=="add", SUBSYSTEM=="pci", KERNEL=="0000:64:00.1", RUN+="${dgpuDisablePm} %k"
+      ACTION=="add", SUBSYSTEM=="pci", KERNEL=="0000:00:03.1", RUN+="${dgpuDisablePm} %k"
+      ACTION=="change", SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_TYPE}=="Mains", RUN+="${config.systemd.package}/bin/systemctl --no-block start syncthing-power.service"
     '';
-  in ''
-    ACTION=="add", SUBSYSTEM=="pci", KERNEL=="0000:64:00.0", RUN+="${dgpuDisablePm} %k"
-    ACTION=="add", SUBSYSTEM=="pci", KERNEL=="0000:64:00.1", RUN+="${dgpuDisablePm} %k"
-    ACTION=="add", SUBSYSTEM=="pci", KERNEL=="0000:00:03.1", RUN+="${dgpuDisablePm} %k"
-    ACTION=="change", SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_TYPE}=="Mains", RUN+="${config.systemd.package}/bin/systemctl --no-block start syncthing-power.service"
-  '';
 
   environment.systemPackages = with pkgs; [
     efibootmgr
