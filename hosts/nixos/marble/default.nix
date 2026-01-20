@@ -274,6 +274,7 @@ in
   };
 
   environment.systemPackages = with pkgs; [
+    inputs.nsight-graphics.packages.${system}.default
     nodejs_24
     lsof
     kdiskmark
