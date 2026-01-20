@@ -69,6 +69,7 @@ in
         ../../../common/home/helix.nix
         ../../../common/home/games.nix
         ../../../common/home/atuin.nix
+        ./audio.nix
       ];
 
       home.activation.vmdir = lib.hm.dag.entryAfter [ "writeBoundary" ] (
