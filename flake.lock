@@ -692,6 +692,27 @@
         "type": "github"
       }
     },
+    "nix-darwin": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1786845137,
+        "narHash": "sha256-oQFip+v0luP8NIxJzmiW4Wu8bILsbFWom5l0zonl8hQ=",
+        "owner": "nix-darwin",
+        "repo": "nix-darwin",
+        "rev": "4cff07de74b50e64bdd68cd4e722ab5b6b35ee48",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-darwin",
+        "ref": "master",
+        "repo": "nix-darwin",
+        "type": "github"
+      }
+    },
     "nix-github-actions": {
       "inputs": {
         "nixpkgs": [
@@ -937,11 +958,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787568768,
-        "narHash": "sha256-uGBTtpCfKnPbS/zSPiDqUtINE4qJVT+1pR6cBhUAyqk=",
+        "lastModified": 1788197632,
+        "narHash": "sha256-jJEpH0+gi9rm5/2FufYa28y94ZKEX7gNG3kB0wpZfGg=",
         "owner": "anomalyco",
         "repo": "opencode",
-        "rev": "105b398c2a9ff2f16eaae409836e1dbc4d37671a",
+        "rev": "04284921ac8f657555b5a182f5ff055f471543e4",
         "type": "github"
       },
       "original": {
@@ -1060,6 +1081,7 @@
         "matugen": "matugen",
         "niri": "niri",
         "niri-unstable": "niri-unstable",
+        "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs_4",
         "nixpkgs-fork": "nixpkgs-fork",
         "nixpkgs-graalvm": "nixpkgs-graalvm",
@@ -1140,11 +1162,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1787861253,
-        "narHash": "sha256-bEwfDd06k+Fwxpu11V2+LcerSjS87aGd/st9hJZO0f8=",
+        "lastModified": 1788269773,
+        "narHash": "sha256-x4HYozouQB7Q8mAGNgfXD8wgW006MaZOH5eif4rwi5M=",
         "ref": "refs/heads/main",
-        "rev": "ec856be5c19ced6c88855c7d9e65afbb56e71dd3",
-        "revCount": 6,
+        "rev": "21db5870325040d42c0c0f7232914fce8ac8fdf3",
+        "revCount": 9,
         "type": "git",
         "url": "ssh://forgejo@ssh-git.madoka.dev:2222/localcc/nixos-config-secrets.git"
       },
