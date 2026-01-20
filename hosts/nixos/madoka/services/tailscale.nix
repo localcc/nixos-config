@@ -9,5 +9,8 @@
     enable = true;
     authKeyFile = config.age.secrets.madoka-tailscale-key.path;
     useRoutingFeatures = "server";
+    extraUpFlags = [
+      "--advertise-exit-node"
+    ];
   };
 }
