@@ -362,7 +362,7 @@ in
     };
     asusd = {
       enable = true;
-      enableUserService = true;
+      # enableUserService = true;
     };
   };
 
