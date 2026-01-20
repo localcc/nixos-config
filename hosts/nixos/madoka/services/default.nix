@@ -10,6 +10,7 @@
     ./reverse-proxy.nix
     ./pocket-id.nix
     ./immich.nix
+    ./forgejo.nix
   ];
 
   # Runtime
