@@ -82,7 +82,9 @@ in
         slack
         virt-manager
         inputs.colmena.packages.${system}.colmena
-        blender
+        (blender.override {
+          cudaSupport = true;
+        })
         unityhub
       ];
 
