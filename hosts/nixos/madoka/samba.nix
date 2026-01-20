@@ -50,7 +50,7 @@ in
 
   # Smb
   services.samba = {
-    package = pkgs.samba4Full;
+    package = pkgs.samba4;
     enable = true;
 
     settings = {
