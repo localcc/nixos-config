@@ -59,7 +59,6 @@ in
           plasma-browser-integration
           plasma-workspace-wallpapers
           konsole
-          ark
           elisa
           kate
           ktexteditor # provides elevated actions for kate
