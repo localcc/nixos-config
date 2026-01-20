@@ -21,7 +21,11 @@
     "rtsx_pci_sdmmc"
   ];
   boot.supportedFilesystems = [ "ntfs" ];
-  boot.kernelModules = [ "kvm-amd" ];
+  boot.extraModulePackages = [
+    config.boot.kernelPackages.zenpower
+  ];
+  boot.blacklistedKernelModules = [ "k10temp" ];
+  boot.kernelModules = [ "kvm-amd" "zenpower" ];
   boot.kernelParams = [
     "amd_iommu=on"
     "nvidia.NVreg_RegistryDwords=EnableBrightnessControl=1"
