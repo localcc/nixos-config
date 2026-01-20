@@ -16,6 +16,39 @@ let
     isodir
     win11-vmdir
   ];
+
+  wave3FixScript = pkgs.writeShellScript "wave-3-fix" ''
+    #!/bin/sh
+    DEV_ID=$(${lib.getExe' pkgs.pipewire "pw-dump"} | ${lib.getExe' pkgs.jq "jq"} -r '
+      .[]
+      | select(.type=="PipeWire:Interface:Device")
+      | select(.info.props["device.name"]=="alsa_card.usb-Elgato_Systems_Elgato_Wave_3_BS04K1A03612-00")
+      | .id')
+
+    ${lib.getExe' pkgs.wireplumber "wpctl"} set-profile "$DEV_ID" 2
+    sleep 5
+    ${lib.getExe' pkgs.wireplumber "wpctl"} set-profile "$DEV_ID" 5
+  '';
+
+  # jackWrap =
+  #   drv:
+  #   pkgs.symlinkJoin {
+  #     name = "${drv.name}-jackwrapped";
+  #     paths = [ drv ];
+  #     buildInputs = [ pkgs.makeWrapper ];
+  #     postBuild = ''
+  #       ls "$out/bin"
+  #       for b in "$out/bin/"*; do
+  #         wrapProgram "$b" \
+  #           --prefix LD_LIBRARY_PATH : "${pkgs.pipewire.jack}/lib"
+  #       done
+  #     '';
+  #   };
+  # carla-bridge = inputs.carla-win-bridge.packages.${pkgs.stdenv.system}.default;
+  unstable = import inputs.nixpkgs-unstable {
+    system = pkgs.stdenv.system;
+    config.allowUnfree = true;
+  };
 in
 {
   imports = [
@@ -135,6 +168,25 @@ in
         })
         unityhub
       ];
+
+      xdg.portal = {
+        enable = true;
+        config.common.default = "kde";
+        extraPortals = with pkgs; [
+          kdePackages.xdg-desktop-portal-kde
+        ];
+      };
+
+      xdg.configFile."autostart/wave-3-fix.desktop" = {
+        text = ''
+          [Desktop Entry]
+          Type=Application
+          Name=Elgato Wave: 3 input "stuck" fix
+          Exec=${wave3FixScript}
+          X-KDE-autostart-phase=2
+          NoDisplay=true
+        '';
+      };
 
       # fuckass unity and xwayland-satellite
       gnome.enable = true;
