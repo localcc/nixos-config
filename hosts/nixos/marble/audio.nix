@@ -30,15 +30,12 @@ in
     (yabridgectl.override { wineWow64Packages = wineWow64Packages; })
     wineWow64Packages.yabridge
   ];
-  home.sessionVariables = {
-    "NIX_PROFILES" = "${pkgs.yabridge} $NIX_PROFILES";
-  };
 
   home.file.".config/pipewire/pipewire.conf.d/realtime.conf" = {
     text = ''
       module.rt.args = {
-        nice.level = -19
-        rt.prio = 99
+        nice.level = -11
+        rt.prio = 80
       }
     '';
   };
