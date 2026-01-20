@@ -19,6 +19,7 @@
     "usbhid"
     "sd_mod"
     "rtsx_pci_sdmmc"
+    "k10temp"
   ];
   boot.supportedFilesystems = [ "ntfs" ];
   boot.extraModulePackages = [

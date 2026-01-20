@@ -203,7 +203,7 @@ in
   ];
 
   # Boot
-  boot.kernelPackages = pkgs.linuxPackages_6_18;
+  boot.kernelPackages = pkgs.linuxPackages_zen;
   boot.secureboot.enable = true;
   boot.splash = {
     enable = lib.mkDefault true;
@@ -214,6 +214,8 @@ in
     );
     theme = "pixels";
   };
+  services.scx.enable = true;
+  services.scx.scheduler = "scx_lavd";
 
   # Network bridge
   # networking.useDHCP = true;
@@ -270,6 +272,7 @@ in
     modesetting.enable = true;
     powerManagement.enable = true;
     powerManagement.finegrained = false;
+    dynamicBoost.enable = true;
 
     # use nvidia opensource driver (not nouveau!!)
     open = true;
