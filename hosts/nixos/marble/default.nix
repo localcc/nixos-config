@@ -241,9 +241,6 @@ in
     );
     theme = "pixels";
   };
-  services.scx.enable = true;
-  # services.scx.scheduler = "scx_lavd";
-  services.scx.scheduler = "scx_bpfland";
 
   # Network bridge
   # networking.useDHCP = true;
