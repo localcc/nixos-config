@@ -115,6 +115,7 @@ in
         ../../../common/home/helix.nix
         ../../../common/home/games.nix
         ../../../common/home/atuin.nix
+        ../../../common/home/zellij.nix
         ./audio.nix
       ];
 
