@@ -125,6 +125,20 @@ in
 
           focus-at-startup = true;
         };
+        outputs."DP-12" = {
+          mode = {
+            width = 2560;
+            height = 1440;
+            refresh = 143.981;
+          };
+
+          position = {
+            x = 0;
+            y = 0;
+          };
+
+          focus-at-startup = true;
+        };
 
         outputs."DP-2" = {
           mode = {
@@ -138,8 +152,26 @@ in
             y = 0;
           };
         };
+        outputs."DP-3" = {
+          mode = {
+            width = 3440;
+            height = 1440;
+            refresh = 59.987;
+          };
+
+          position = {
+            x = -450;
+            y = 0;
+          };
+        };
 
         outputs."eDP-1" = {
+          position = {
+            x = 450;
+            y = 1440;
+          };
+        };
+        outputs."eDP-2" = {
           position = {
             x = 450;
             y = 1440;
