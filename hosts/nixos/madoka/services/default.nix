@@ -1,4 +1,5 @@
 {
+  inputs,
   ...
 }:
 {
@@ -13,6 +14,7 @@
     ./harmonia.nix
     ./autossh.nix
     ./oauth2-proxy
+    inputs.private-services.nixosModules.madoka
   ];
 
   # Runtime
@@ -43,6 +45,14 @@
         subnet = "172.24.0.0/24";
         gateway = "172.24.0.1";
       };
+    };
+    "lan" = {
+      additionalParams = [
+        "--driver macvlan"
+        "--interface-name enp5s0"
+        "--subnet 192.168.0.0/24"
+        "--gateway 192.168.0.1"
+      ];
     };
   };
 }

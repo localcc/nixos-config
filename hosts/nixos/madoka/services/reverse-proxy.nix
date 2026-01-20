@@ -61,6 +61,9 @@ in
         network."tailnet" = {
           ipv4-address = "172.20.0.2";
         };
+        network."lan" = {
+          ipv4-address = "192.168.0.14";
+        };
         extraOptions = [
           "--cap-add=NET_ADMIN"
           "--device=/dev/net/tun:/dev/net/tun:rwm"
