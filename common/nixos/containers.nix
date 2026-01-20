@@ -28,11 +28,44 @@ let
     };
   };
 
+  containerHealthCheckOptions = with lib; {
+    options = {
+      test = mkOption {
+        type = types.str;
+        description = "Command to run for healthcheck";
+      };
+      interval = mkOption {
+        type = types.nullOr types.str;
+        description = "Healthcheck interval";
+        default = null;
+      };
+      timeout = mkOption {
+        type = types.nullOr types.str;
+        description = "Healthcheck timeout";
+        default = null;
+      };
+      retries = mkOption {
+        type = types.nullOr types.int;
+        description = "Maximum number of failed healthchecks";
+        default = null;
+      };
+      start-period = mkOption {
+        type = types.nullOr types.str;
+        description = "Period between container starting in which healthcheck failures will be ignored";
+        default = null;
+      };
+    };
+  };
+
   containerOptions = with lib; {
     options = {
       network = mkOption {
         type = types.attrsOf (types.submodule containerNetworkOptions);
-        default = {};
+        default = { };
+      };
+      healthcheck = mkOption {
+        type = types.nullOr (types.submodule containerHealthCheckOptions);
+        default = null;
       };
     };
   };
@@ -54,6 +87,7 @@ let
       ipam = mkOption {
         type = types.nullOr (types.submodule ipamOptions);
         description = "IPAM configuration";
+        default = null;
       };
     };
   };
@@ -93,6 +127,7 @@ in
             let
               clean = builtins.removeAttrs value [
                 "network"
+                "healthcheck"
                 "serviceName"
               ];
               containerNetwork = lib.findFirst (net: lib.strings.hasPrefix "container" net) null (
@@ -108,6 +143,12 @@ in
                   "--network=${name}${networkOptions}"
                 ) value.network
               );
+
+              mkHealthcheckOption = option: (lib.mkIf (value.healthcheck.${option} != null) {
+                extraOptions = [
+                  "--health-${option}=${value.healthcheck.${option}}"
+                ];
+              });
             in
             {
               inherit name;
@@ -122,9 +163,26 @@ in
                 }
                 (lib.mkIf (!hasContainerNetwork) {
                   extraOptions = [
-                    "--network-alias=${stackName}-${name}"
+                    "--network-alias=${name}"
                   ];
                 })
+                (lib.mkIf (value.healthcheck != null) (
+                  lib.mkMerge [
+                    {
+                      extraOptions = [
+                        "--health-cmd=${value.healthcheck.test}"
+                      ];
+                    }
+                    (lib.mkIf (value.healthcheck.retries != null) {
+                      extraOptions = [
+                        "--health-retries=${toString value.healthcheck.retries}"
+                      ];
+                    })
+                    (mkHealthcheckOption "interval")
+                    (mkHealthcheckOption "timeout")
+                    (mkHealthcheckOption "start-period")
+                  ]
+                ))
               ];
             }
           ) containerList;
