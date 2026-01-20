@@ -35,6 +35,7 @@ in
       package = pkgs.obs-studio.override { cudaSupport = true; };
     };
 
+    fonts.fontDir.enable = true;
     services.flatpak.enable = true;
     environment.systemPackages =
       with pkgs;
