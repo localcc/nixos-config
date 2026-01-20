@@ -93,7 +93,7 @@ in
         enable = true;
         noctalia = true;
         laptop = true;
-        wallpaper = (inputs.self + /assets/wallpaper.jpg);
+        wallpaper = (inputs.self + /assets/wallpaper1.jpg);
         pfp = config.age.secrets.pfp.path;
 
         binds = {
