@@ -4,9 +4,6 @@
   ...
 }:
 {
-  # Disable upstream supergfxd module so we can use our local one
-  disabledModules = [ "services/hardware/supergfxd.nix" ];
-
   imports = [
     ./gnome.nix
     ./niri.nix
@@ -16,7 +13,6 @@
     ./splash.nix
     ./secureboot.nix
     ./sound.nix
-    ./supergfxd.nix
     ./desktop.nix
     ./containers.nix
     inputs.blackwall.nixosModules.default

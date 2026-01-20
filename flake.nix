@@ -9,7 +9,10 @@
       url = "git+ssh://forgejo@ssh-git.madoka.dev:2222/localcc/nixos-config-secrets.git";
       flake = false;
     };
-
+    gpu-switcher = {
+      url = "github:localcc/gpu-switcher";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -58,11 +61,6 @@
 
     awww = {
       url = "git+https://codeberg.org/LGFae/awww";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    supergfxctl = {
-      url = "github:/localcc/supergfxctl";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

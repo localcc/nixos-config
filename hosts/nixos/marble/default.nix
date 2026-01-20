@@ -34,6 +34,7 @@ in
         installation = false;
       }
     ))
+    inputs.gpu-switcher.nixosModules.default
     inputs.chaotic.nixosModules.nyx-cache
     inputs.chaotic.nixosModules.nyx-overlay
     inputs.chaotic.nixosModules.nyx-registry
@@ -261,7 +262,12 @@ in
   };
 
   services = {
-    supergfxd.enable = true;
+    gpu-switcher = {
+      enable = true;
+      settings = {
+        device_path = "0000:64:00.0";
+      };
+    };
     asusd = {
       enable = true;
       enableUserService = true;
