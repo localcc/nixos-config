@@ -23,7 +23,7 @@ in
     services.tailscale.enable = true;
     services.mullvad-vpn = {
       enable = true;
-      package = pkgs.mullvad-vpn;
+      gui.enable = true;
     };
 
     services.logind.settings.Login.HandleLidSwitch = "suspend";
@@ -85,11 +85,11 @@ in
         unstable.zed-editor
         discord
         signal-desktop
+        mpv
 
         # parsec-bin
         trayscale
         obsidian
-        pavucontrol
 
         helium
         # guh drm
