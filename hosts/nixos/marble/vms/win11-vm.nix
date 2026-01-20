@@ -68,6 +68,25 @@ let
   vmPowerProfile = "performance";
   normalPowerProfile = "power-saver";
 
+  hugepageCount = memSizeKib / 2048;
+
+  allocateHugepages = ''
+    echo "Allocating ${builtins.toString hugepageCount} hugepages of 2 MiB..."
+    echo ${builtins.toString hugepageCount} > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages 2>/dev/null || true
+    tries=0
+    while [ "$(cat /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages)" != "${builtins.toString hugepageCount}" ] && [ "$tries" -lt 100 ]; do
+      echo 1 > /proc/sys/vm/compact_memory 2>/dev/null || true
+      echo 3 > /proc/sys/vm/drop_caches 2>/dev/null || true
+      echo ${builtins.toString hugepageCount} > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages 2>/dev/null || true
+      tries=$((tries + 1))
+      sleep 0.2
+    done
+  '';
+
+  freeHugepages = ''
+    echo 0 > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages 2>/dev/null || true
+  '';
+
   # todo: only set governor for cpus pinned to the vm
   setGovernor = governor: powerprofile: ''
     ## Set CPU governor to mode indicated by variable
@@ -95,6 +114,7 @@ let
   '';
 
   startScript = ''
+    ${allocateHugepages}
     ${setGovernor vmGovernor vmPowerProfile}
     ${isolateThreads vmIsolatedThreads}
   '';
@@ -102,6 +122,7 @@ let
   stopScript = ''
     ${setGovernor normalGovernor normalPowerProfile}
     ${isolateThreads normalHostThreads}
+    ${freeHugepages}
   '';
 
   hookScript = pkgs.writeShellScript "hook.sh" ''
@@ -297,7 +318,8 @@ in
 
   virtualisation.libvirt.connections."qemu:///session".domains = [
     {
-      definition = nixvirt.lib.domain.writeXML {
+      definition = pkgs.runCommand "NixVirt-domain-win11.xml" {
+        base = nixvirt.lib.domain.writeXML {
         name = vmName;
         uuid = "b4310a94-8e41-4681-a7e6-0c4d8140c83a";
         type = "kvm";
@@ -328,14 +350,27 @@ in
             cpuset = builtins.toString cpu;
           }) (lib.lists.flatten cpuTopology);
           emulatorpin.cpuset = emulatorSet;
+          iothreadpin = {
+            iothread = 1;
+            cpuset = "3,15";
+          };
         };
         memory = {
           count = memSizeKib;
           unit = "KiB";
         };
-        # memoryBacking = {
-        #   hugepages = { };
-        # };
+        iothreads = {
+          count = 1;
+        };
+        memoryBacking = {
+          hugepages = {
+            page = {
+              size = 2;
+              unit = "MiB";
+            };
+          };
+          locked = { };
+        };
         os = {
           type = "hvm";
           arch = "x86_64";
@@ -369,7 +404,10 @@ in
             vpindex.state = true;
             runtime.state = true;
             synic.state = true;
-            stimer.state = true;
+            stimer = {
+              state = true;
+              direct.state = true;
+            };
             frequencies.state = true;
             tlbflush.state = true;
             ipi.state = true;
@@ -377,6 +415,10 @@ in
           };
           vmport.state = false;
           smm.state = true;
+          kvm = {
+            hint-dedicated.state = true;
+            poll-control.state = false;
+          };
         };
         clock = {
           offset = "localtime";
@@ -422,15 +464,15 @@ in
               };
               source.file = vmpart;
               target = {
-                dev = "sda";
-                bus = "sata";
+                dev = "vda";
+                bus = "virtio";
               };
               address = {
-                type = "drive";
-                controller = 0;
-                bus = hex "0x0";
-                target = 0;
-                unit = 0;
+                type = "pci";
+                domain = hex "0x0000";
+                bus = hex "0x09";
+                slot = hex "0x00";
+                function = hex "0x0";
               };
               boot.order = if installation then 2 else 1;
             }
@@ -520,25 +562,7 @@ in
               slot = hex "0x03";
               function = index + 1; # function = 1 and so on
             }
-          ) 5)
-          ++ [
-            {
-              type = "scsi";
-              index = 0;
-              model = "virtio-scsi";
-              driver = {
-                iothread = 1;
-                queues = 8;
-              };
-              address = {
-                type = "pci";
-                domain = hex "0x0000";
-                bus = hex "0x03";
-                slot = hex "0x00";
-                function = hex "0x0";
-              };
-            }
-          ];
+          ) 5);
           interface = networkInterfaces;
           input = virtioInputs ++ [
             {
@@ -620,7 +644,17 @@ in
               ]
           );
         };
-      };
+        };
+      }
+      ''
+        substitute "$base" $out \
+          --replace-fail \
+            "<hyperv mode='custom'>" \
+            "<hyperv mode='custom'><avic state='on'/>" \
+          --replace-fail \
+            "<driver name='qemu' type='qcow2' cache='none' io='io_uring' discard='unmap'/>" \
+            "<driver name='qemu' type='qcow2' cache='none' io='io_uring' discard='unmap' iothread='1'/>"
+      '';
     }
   ];
 }
