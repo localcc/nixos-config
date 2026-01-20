@@ -17,7 +17,7 @@ let
       oidc_issuer_url = "https://meow.madoka.dev"
       scope = "openid profile email groups"
       proxy_prefix = "/oauth2"
-      cookie_domains = [ "radarr.madoka", "sonarr.madoka", "animarr.madoka", "animlarr.madoka", "radanimarr.madoka", "prowlarr.madoka" ]
+      cookie_domains = [ "radarr.madoka", "sonarr.madoka", "animarr.madoka", "animlarr.madoka", "radanimarr.madoka", "prowlarr.madoka", "lidarr.madoka" ]
       cookie_secure = false
       cookie_refresh = "1h"
       cookie_secret_file = "/cookie_secret"
