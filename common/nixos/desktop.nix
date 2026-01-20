@@ -36,6 +36,11 @@ in
       enableVirtualCamera = true;
       package = pkgs.obs-studio.override { cudaSupport = true; };
     };
+    programs.wireshark = {
+      enable = true;
+      package = pkgs.wireshark;
+      dumpcap.enable = true;
+    };
 
     fonts.fontDir.enable = true;
     services.flatpak.enable = true;
@@ -56,6 +61,8 @@ in
         python313
         meson
         unzip
+        jetbrains.idea
+        jetbrains.webstorm
 
         # gnu (ew)
         gnumake
@@ -81,6 +88,8 @@ in
         pavucontrol
 
         helium
+        # guh drm
+        microsoft-edge
       ];
 
     };
