@@ -7,7 +7,7 @@ let
   dataDir = "/mnt/Storage/Docker/compose/immich";
   uploadDir = "${dataDir}/library";
   databaseDir = "${dataDir}/postgres";
-  immichVersion = "v2";
+  immichVersion = "v3";
   timeZone = "Europe/Prague";
 in
 {
@@ -55,7 +55,7 @@ in
         network."immich" = {};
       };
       "immich_redis" = {
-        image = "docker.io/valkey/valkey:8@sha256:81db6d39e1bba3b3ff32bd3a1b19a6d69690f94a3954ec131277b9a26b95b3aa";
+        image = "docker.io/valkey/valkey:9@sha256:418652cfb58ef879d4978c33553735d7147016032d5aefaa14c828e611eb9dfd";
         network."immich" = {};
         healthcheck = {
           test = "redis-cli ping || exit 1";
