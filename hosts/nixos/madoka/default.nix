@@ -24,6 +24,7 @@ in
     ./podman.nix
     ./services
     ./hardware-configuration.nix
+    ./kate.nix
   ];
 
   # Boot
