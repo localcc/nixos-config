@@ -52,6 +52,7 @@ in
         ninja
         python313
         meson
+        unzip
 
         # gnu (ew)
         gnumake
