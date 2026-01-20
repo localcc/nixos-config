@@ -54,7 +54,23 @@ in
       nwg-look
       # qt config tool
       kdePackages.qt6ct
+
+      # cursors
+      rose-pine-cursor
     ];
+
+    home.pointerCursor = {
+      name = "BreezeX-RosePine-Linux";
+      package = pkgs.rose-pine-cursor;
+
+      gtk.enable = true;
+      x11.enable = true;
+      size = 32;
+    };
+    programs.niri.settings.cursor = {
+      theme = "BreezeX-RosePine-Linux";
+      size = 32;
+    };
 
     home.sessionVariables = {
       QT_QPA_PLATFORMTHEME = "qt6ct";
