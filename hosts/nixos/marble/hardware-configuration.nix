@@ -45,6 +45,9 @@
       ];
     };
   };
+  environment.etc.crypttab.text = ''
+    cryptroot UUID=c80fb4d8-6618-4877-99da-7fc1ce4b4b9c none no-read-workqueue,no-write-workqueue
+  '';
 
   swapDevices = [
     {
