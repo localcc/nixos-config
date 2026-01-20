@@ -80,7 +80,7 @@ let
     done
 
     ## Set system power profile to performance
-    ${pkgs.power-profiles-daemon}/bin/powerprofilesctl set ${powerprofile}
+    # ${pkgs.power-profiles-daemon}/bin/powerprofilesctl set ${powerprofile}
 
     sleep 1
   '';
