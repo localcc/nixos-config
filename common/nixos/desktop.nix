@@ -37,6 +37,7 @@ in
 
     fonts.fontDir.enable = true;
     services.flatpak.enable = true;
+
     environment.systemPackages =
       with pkgs;
       let
@@ -67,7 +68,7 @@ in
         })
 
         # apps
-        telegram-desktop
+        unstable.telegram-desktop
         unstable.zed-editor
         discord
         signal-desktop
@@ -77,6 +78,7 @@ in
         obsidian
         pavucontrol
 
+        
         (microsoft-edge.override {
           commandLineArgs = [
             "--enable-features=TouchpadOverscrollHistoryNavigation,VaapiVideoDecodeLinuxGL,VaapiVideoEncoder,VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport,UseMultiPlaneFormatForHardwareVideo"
