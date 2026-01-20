@@ -293,6 +293,7 @@ let
     };
 in
 {
+  virtualisation.libvirtd.qemu.vhostUserPackages = [ pkgs.virtiofsd ];
   virtualisation.libvirtd.hooks = {
     qemu = {
       "${vmName}" = "${hookScript}";
