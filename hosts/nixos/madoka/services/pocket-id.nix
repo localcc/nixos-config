@@ -38,6 +38,10 @@ in
           retries = 2;
           start-period = "10s";
         };
+        dependsOn = [
+          "cloudflare_tunnel"
+          "tailscale"
+        ];
         network = {
           "cloudflare_tunnel" = {
             ipv4-address = "172.24.0.4";

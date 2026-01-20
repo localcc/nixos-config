@@ -35,6 +35,7 @@ in
         dependsOn = [
           "immich_redis"
           "immich_postgres"
+          "cloudflare_tunnel"
         ];
         network = {
           "cloudflare_tunnel" = {

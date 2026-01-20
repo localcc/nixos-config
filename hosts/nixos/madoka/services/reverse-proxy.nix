@@ -25,6 +25,9 @@ in
           "${dataDir}/data/caddy:/data"
           "${dataDir}/certs:/certs"
         ];
+        dependsOn = [
+          "tailscale"
+        ];
         network."tailnet" = {};
         extraOptions = [
           "--cap-add=NET_ADMIN"
