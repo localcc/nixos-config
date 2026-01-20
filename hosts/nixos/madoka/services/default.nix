@@ -7,6 +7,7 @@
     ./unifi.nix
     ./tailscale.nix
     ./media-server.nix
+    ./reverse-proxy.nix
   ];
 
   # Runtime
@@ -32,6 +33,12 @@
       ipam = {
         subnet = "172.20.0.0/24";
         gateway = "172.20.0.1";
+      };
+    };
+    "cloudflare_tunnel" = {
+      ipam = {
+        subnet = "172.24.0.0/24";
+        gateway = "172.24.0.1";
       };
     };
   };
