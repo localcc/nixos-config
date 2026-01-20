@@ -1,0 +1,287 @@
+From 7db33412b402070126b79123e6609e209ea57fb2 Mon Sep 17 00:00:00 2001
+From: Kate Odnokoz <work@localcc.cc>
+Date: Sun, 9 Aug 2026 11:23:17 +0200
+Subject: [PATCH] platform/x86: asus-armoury: make runtime dGPU re-enable reliable
+
+Runtime dGPU re-enable via the dgpu_disable firmware attribute is
+inconsistent on some laptops (HX370 + RTX 5070 Ti Mobile GA403WR Zephyrus).
+DSDT analysis shows the WMI enable method does this:
+
+1. saves the new flag, then fires Notify(GPP9.PEGP, Bus Check),
+2. polls (WAT2, ~20s) for the dGPU config space to answer, returning
+   0 on timeout,
+3. only on success completes the handshake (PWMD etc).
+
+The rail itself is powered by the PG00 power resource _ON method, which
+on Windows runs when the PNP manager services the Bus Check notify and
+powers the re-enumerated device. With native PCIe hotplug (pciehp)
+owning the slot, nothing on Linux services that notify, so the rail
+never powers, WAT2 times out and the store fails with result 0, which
+this driver treats as -EIO. The flag is saved regardless, leaving the
+firmware state and reality out of sync. Sometimes the rail can come back
+by itself (e.g. AC adapter change), but pciehp might fail link training
+and latch the port's Link Disable bit with no retry.
+
+Signed-off-by: Kate Odnokoz <work@localcc.cc>
+---
+ drivers/platform/x86/asus-armoury.c | 200 +++++++++++++++++++++++++++-
+ 1 file changed, 199 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
+index 495dc1e..b6e1344 100644
+--- a/drivers/platform/x86/asus-armoury.c
++++ b/drivers/platform/x86/asus-armoury.c
+@@ -16,6 +16,7 @@
+ #include <linux/acpi.h>
+ #include <linux/array_size.h>
+ #include <linux/bitfield.h>
++#include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/dmi.h>
+ #include <linux/err.h>
+@@ -32,6 +33,7 @@
+ #include <linux/printk.h>
+ #include <linux/power_supply.h>
+ #include <linux/sysfs.h>
++#include <linux/workqueue.h>
+ 
+ #include "asus-armoury.h"
+ #include "firmware_attributes_class.h"
+@@ -485,11 +487,95 @@ static ssize_t gpu_mux_mode_current_value_store(struct kobject *kobj,
+ ASUS_WMI_SHOW_INT(gpu_mux_mode_current_value, asus_armoury.gpu_mux_dev_id);
+ ASUS_ATTR_GROUP_BOOL(gpu_mux_mode, "gpu_mux_mode", "Set the GPU display MUX mode");
+ 
++static void armoury_pci_rescan(void);
++
++static void armoury_dgpu_enable_fixup(struct work_struct *work);
++static DECLARE_DELAYED_WORK(armoury_dgpu_enable_work, armoury_dgpu_enable_fixup);
++
++/* ACPI handle of the dGPU's parent port (has the PG00 power resource) */
++static acpi_handle armoury_dgpu_port_acpi;
++
++/*
++ * Find the root port whose ACPI companion provides the dGPU power
++ * resource (PG00._ON). The handle references a namespace node, so it
++ * stays valid across PCI device removal/re-enumeration.
++ */
++static acpi_handle armoury_dgpu_find_port_acpi(void)
++{
++	struct pci_dev *pdev = NULL;
++	acpi_handle handle;
++
++	if (armoury_dgpu_port_acpi)
++		return armoury_dgpu_port_acpi;
++
++	while ((pdev = pci_get_class(PCI_CLASS_BRIDGE_PCI << 8, pdev))) {
++		if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT)
++			continue;
++
++		handle = ACPI_HANDLE(&pdev->dev);
++		if (handle && acpi_has_method(handle, "PG00._ON")) {
++			pr_debug("dGPU power resource PG00 found on %s\n", pci_name(pdev));
++			armoury_dgpu_port_acpi = handle;
++			pci_dev_put(pdev);
++			return handle;
++		}
++	}
++
++	return NULL;
++}
++
++/*
++ * The firmware enable method expects the OS to power the dGPU rail via
++ * the PG00 power resource in response to its Bus Check notify (this is
++ * what Windows' PNP manager does). With native PCIe hotplug - nothing
++ * services that notify, so the rail never powers and the firmware's
++ * WAT2() poll for the dGPU config space times out (WMI result 0).
++ * Evaluate the power resource directly instead.
++ */
++static void armoury_dgpu_power_on(void)
++{
++	acpi_handle handle = armoury_dgpu_find_port_acpi();
++	acpi_status status;
++
++	if (!handle) {
++		pr_warn("dGPU enable: no ACPI power resource found, rail may stay off\n");
++		return;
++	}
++
++	status = acpi_evaluate_object(handle, "PG00._ON", NULL, NULL);
++	if (ACPI_FAILURE(status))
++		pr_err("dGPU enable: PG00._ON failed: %s\n",
++		       acpi_format_exception(status));
++	else
++		pr_debug("dGPU enable: rail powered via PG00._ON\n");
++}
++
++/* Fresh lookup of the dGPU's parent port via its ACPI _ADR.
++ * This does not stay valid after reenumerations.
++ */
++static struct pci_dev *armoury_dgpu_port(void)
++{
++	unsigned long long adr;
++	acpi_handle handle;
++
++	handle = armoury_dgpu_find_port_acpi();
++	if (!handle)
++		return NULL;
++
++	if (ACPI_FAILURE(acpi_evaluate_integer(handle, "_ADR", NULL, &adr)))
++		return NULL;
++
++	return pci_get_domain_bus_and_slot(0, 0,
++					   PCI_DEVFN((adr >> 16) & 0xffff,
++						     adr & 0xffff));
++}
++
+ static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
+ 						struct kobj_attribute *attr, const char *buf,
+ 						size_t count)
+ {
+ 	int result, err;
++	u32 wmi_result = 0;
+ 	bool disable;
+ 
+ 	err = kstrtobool(buf, &disable);
+@@ -507,11 +593,27 @@ static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
+ 	}
+ 
+ 	scoped_guard(mutex, &asus_armoury.egpu_mutex) {
+-		err = armoury_set_devstate(attr, disable ? 1 : 0, NULL, ASUS_WMI_DEVID_DGPU);
++		err = armoury_set_devstate(attr, disable ? 1 : 0, &wmi_result,
++					   ASUS_WMI_DEVID_DGPU);
+ 		if (err)
+ 			return err;
+ 	}
+ 
++	if (wmi_result > 1) {
++		pr_err("Failed to set %s: (result): 0x%x\n", attr->attr.name, wmi_result);
++		return -EIO;
++	}
++
++	if (disable && wmi_result == 0)
++		pr_warn("dGPU disable: firmware eject handshake did not complete\n");
++
++	if (!disable) {
++		pr_debug("dGPU enable requested (wmi result 0x%x), powering rail\n",
++			wmi_result);
++		armoury_dgpu_power_on();
++		schedule_delayed_work(&armoury_dgpu_enable_work, msecs_to_jiffies(5000));
++	}
++
+ 	sysfs_notify(kobj, NULL, attr->attr.name);
+ 
+ 	return count;
+@@ -542,6 +644,100 @@ static void armoury_pci_rescan(void)
+ 	pci_unlock_rescan_remove();
+ }
+ 
++/*
++ * armoury_dgpu_enable_fixup() - Finish a dGPU re-enable.
++ *
++ * If pciehp failed to train the link it latches the port's Link Disable bit
++ * and gives up, leaving a powered, present card unreachable; clear Link
++ * Disable on any hotplug port in that state and rescan. Once the dGPU is
++ * enumerated, issue a second WMI store so the firmware's enable handshake
++ * (WAT2 poll) succeeds and the state is saved.
++ */
++static void armoury_dgpu_enable_fixup(struct work_struct *work)
++{
++	struct pci_dev *pdev = NULL, *port;
++	bool enumerated, rescan = false;
++	u16 lnkctl, lnksta, sltsta;
++	u32 wmi_result = 0;
++	int err;
++
++	pr_debug("dGPU enable fixup: checking hotplug ports\n");
++
++	for_each_pci_dev(pdev) {
++		if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT &&
++		    pci_pcie_type(pdev) != PCI_EXP_TYPE_DOWNSTREAM)
++			continue;
++
++		if (pcie_capability_read_word(pdev, PCI_EXP_LNKCTL, &lnkctl) ||
++		    pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &sltsta))
++			continue;
++
++		if (!(sltsta & PCI_EXP_SLTSTA_PDS))
++			continue;
++
++		pr_debug("dGPU enable fixup: %s: card present, LNKCTL=0x%04x SLTSTA=0x%04x%s\n",
++			pci_name(pdev), lnkctl, sltsta,
++			(lnkctl & PCI_EXP_LNKCTL_LD) ? " (link disabled)" : "");
++
++		if (!(lnkctl & PCI_EXP_LNKCTL_LD))
++			continue;
++
++		pcie_capability_clear_word(pdev, PCI_EXP_LNKCTL, PCI_EXP_LNKCTL_LD);
++		pr_debug("dGPU enable fixup: %s: cleared Link Disable\n", pci_name(pdev));
++		rescan = true;
++	}
++
++	if (rescan) {
++		/* give the link a moment to train before enumerating */
++		msleep(1000);
++		armoury_pci_rescan();
++		pr_debug("dGPU enable fixup: PCI rescan done\n");
++	}
++
++	for_each_pci_dev(pdev) {
++		if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT &&
++		    pci_pcie_type(pdev) != PCI_EXP_TYPE_DOWNSTREAM)
++			continue;
++
++		if (pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &sltsta) ||
++		    !(sltsta & PCI_EXP_SLTSTA_PDS))
++			continue;
++
++		if (pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnksta))
++			lnksta = 0;
++
++		pr_debug("dGPU enable fixup: %s: LNKSTA=0x%04x (%s, %s), %s behind port\n",
++			pci_name(pdev), lnksta,
++			(lnksta & PCI_EXP_LNKSTA_DLLLA) ? "link up" : "link DOWN",
++			(lnksta & PCI_EXP_LNKSTA_LT) ? "retraining" : "trained",
++			(pdev->subordinate && !list_empty(&pdev->subordinate->devices)) ?
++				"device(s) present" : "NO DEVICE");
++	}
++
++	port = armoury_dgpu_port();
++	if (!port) {
++		pr_warn("dGPU enable fixup: dGPU port not found, skipping save store\n");
++		return;
++	}
++	enumerated = port->subordinate && !list_empty(&port->subordinate->devices);
++	pci_dev_put(port);
++
++	if (!enumerated) {
++		pr_warn("dGPU enable fixup: dGPU did not enumerate, not saving state\n");
++		return;
++	}
++
++	mutex_lock(&asus_armoury.egpu_mutex);
++	err = armoury_set_devstate(NULL, 0, &wmi_result, ASUS_WMI_DEVID_DGPU);
++	mutex_unlock(&asus_armoury.egpu_mutex);
++
++	if (err)
++		pr_warn("dGPU enable fixup: save store failed: %d\n", err);
++	else
++		pr_debug("dGPU enable fixup: save store done (wmi result 0x%x)\n",
++			wmi_result);
++}
++
+ /*
+  * The ACPI call to enable the eGPU might also disable the internal dGPU,
+  * but this is not always the case and on certain models enabling the eGPU
+@@ -1137,6 +1333,8 @@ static void __exit asus_fw_exit(void)
+ {
+ 	int i;
+ 
++	cancel_delayed_work_sync(&armoury_dgpu_enable_work);
++
+ 	for (i = ARRAY_SIZE(armoury_attr_groups) - 1; i >= 0; i--) {
+ 		if (armoury_has_devstate(armoury_attr_groups[i].wmi_devid))
+ 			sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj,
+-- 
+2.55.0
+
