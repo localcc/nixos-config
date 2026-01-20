@@ -10,6 +10,8 @@
     ./pocket-id.nix
     ./immich.nix
     ./forgejo.nix
+    ./harmonia.nix
+    ./autossh.nix
     ./oauth2-proxy
   ];
 

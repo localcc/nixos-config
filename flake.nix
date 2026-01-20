@@ -107,6 +107,12 @@
       url = "github:nix-community/disko/latest";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    harmonia = {
+      url = "github:nix-community/harmonia";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     kimi-code = {
       url = "github:MoonshotAI/kimi-code/main";
     };

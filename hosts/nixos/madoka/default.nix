@@ -120,6 +120,12 @@ in
     destinationPorts = [ { port = 22; type = "tcp"; } ];
     verdict = "accept";
   };
+  blackwall.rules.podman-to-local = {
+    type = "input";
+    from = [ "podman" ];
+    destinationPorts = [ { port = 5000; type = "tcp"; } ];
+    verdict = "accept";
+  };
 
   environment.systemPackages = with pkgs; [
     helix
