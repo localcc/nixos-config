@@ -14,6 +14,10 @@
     
     blackwall.url = "github:localcc/blackwall";
 
+    bedrock-on-linux = {
+      url = "github:Wyze3306/BedrockOnLinux";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     ghelper = {
       # url = "github:utajum/g-helper-linux?dir=nixos";
       url = "github:localcc/g-helper-linux/fix-nix-build?dir=nixos";

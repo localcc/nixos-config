@@ -34,5 +34,13 @@ in
         pkgs.winetricks
       ];
     })
+    (inputs.bedrock-on-linux.packages.${pkgs.stdenv.system}.default.overrideAttrs (old: {
+      postFixup = (old.postFixup or "") + ''
+        wrapProgram $out/bin/bedrock-on-linux \
+          --unset QT_PLUGIN_PATH \
+          --unset QML2_IMPORT_PATH \
+          --unset NIXPKGS_QT6_QML_IMPORT_PATH
+      '';
+    }))
   ];
 }
