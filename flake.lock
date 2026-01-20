@@ -864,11 +864,11 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1787364730,
-        "narHash": "sha256-NcYt9QJfpJiF1lAyN8BDPB4EeScbPU+EwQqPiBElrpU=",
+        "lastModified": 1787394516,
+        "narHash": "sha256-pRGOQSClnXNI2iLUG6DYpsGvYcuw0drOutVZFTJNw90=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "a831408e6378bc02ebf8cc09b52c96ca86f6bab4",
+        "rev": "c8f90650c15282fa8656a041bfbbd2403997a9a7",
         "type": "github"
       },
       "original": {
@@ -1146,10 +1146,10 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1787490136,
-        "narHash": "sha256-MqD74H8xuRSpx/CRjkx6s/G2vulEZOwku6A0RxjzzuM=",
+        "lastModified": 1787566000,
+        "narHash": "sha256-KvgCdpN2m4ypwz2JHLo5VZSBtFKDWdmul1Ngz96vk4E=",
         "ref": "refs/heads/main",
-        "rev": "1a77b5b8993e98895b3022aac6f1d1ed2d040ced",
+        "rev": "92d7aaaf9cae82990caa05c6c25421ac9109683f",
         "revCount": 5,
         "type": "git",
         "url": "ssh://forgejo@ssh-git.madoka.dev:2222/localcc/nixos-config-secrets.git"

@@ -26,11 +26,13 @@
 
   nix.settings = {
     substituters = [
+      "https://cache.madoka.dev"
       "https://nix-community.cachix.org"
       "https://cache.nixos.org/"
       "https://cache.nixos-cuda.org"
     ];
     trusted-public-keys = [
+      "cache.madoka.dev-1:Xj8Hh2wSSeq/ueEzdWxJtnaEaT4sdyz/2LBT8gKDBpk="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
     ];

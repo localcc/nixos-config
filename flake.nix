@@ -132,13 +132,20 @@
     let
       inherit (inputs.nixpkgs) lib;
 
+      systems = builtins.attrNames (builtins.readDir ./hosts);
+
+      hostList = builtins.concatMap (
+        system:
+        map (host: { inherit system host; }) (builtins.attrNames (builtins.readDir ./hosts/${system}))
+      ) systems;
+
       mkHost =
         system: hostname:
         let
           builder =
             if system == "darwin" then inputs.nix-darwin.lib.darwinSystem else inputs.nixpkgs.lib.nixosSystem;
           config = builder {
-            specialArgs = { inherit inputs; };
+            specialArgs = { inherit inputs hostList; };
             modules = [
               ./hosts/${system}/${hostname}
               ./common
@@ -173,7 +180,6 @@
         };
       };
 
-      systems = builtins.attrNames (builtins.readDir ./hosts);
       hosts = builtins.concatMap (
         system:
         let
@@ -207,7 +213,7 @@
         meta = {
           nixpkgs = pkgsForSystem "x86_64-linux";
           specialArgs = {
-            inherit inputs;
+            inherit inputs hostList;
           };
         };
       }
