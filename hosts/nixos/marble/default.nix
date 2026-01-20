@@ -289,6 +289,7 @@ in
 
   # Battery
   services.upower.enable = true;
+  services.power-profiles-daemon.enable = lib.mkForce false;
   services.tlp = {
     enable = true;
     settings = {
