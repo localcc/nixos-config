@@ -78,9 +78,12 @@ in
       jj.enable = true;
       helix.enable = true;
       home.packages = with pkgs; [
+        devenv
         slack
         virt-manager
         inputs.colmena.packages.${system}.colmena
+        blender
+        unityhub
       ];
 
       niri = {
@@ -305,6 +308,7 @@ in
 
 
   environment.systemPackages = with pkgs; [
+    gsettings-desktop-schemas
     inputs.nsight-graphics.packages.${system}.default
     nodejs_24
     lsof
