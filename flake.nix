@@ -13,7 +13,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     sing = {
-      url = "git+file:///home/kate/dev/nix-sing";
+      url = "github:localcc/nix-sing";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     secrets = {
