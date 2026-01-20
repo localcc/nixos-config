@@ -22,7 +22,19 @@
       ../../../common/home/atuin.nix
       ../../../common/home/zellij.nix
       ../../../common/home/helix.nix
+      ../../../common/home/syncthing.nix
     ];
+
+    syncthing = {
+      enable = true;
+      connectedDevices = [ "kate_marble" "cider" ];
+    };
+    services.syncthing.settings.folders = {
+      "dev" = {
+        path = "/home/kate/dev";
+        devices = [ "kate_marble" "cider" ];
+      };
+    };
 
     helix.enable = true;
     # do not remove

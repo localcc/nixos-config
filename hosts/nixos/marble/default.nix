@@ -52,6 +52,7 @@ let
 in
 {
   imports = [
+    ../../../common/nixos/syncthing.nix
     ./hardware-configuration.nix
     ./alsa.nix
     ./qemu.nix
@@ -69,6 +70,7 @@ in
     inputs.ghelper.nixosModules.default
     inputs.gpu-switcher.nixosModules.default
   ];
+
   kde.enable = true;
   desktop.enable = true;
   desktop.multi-de = false;
@@ -178,6 +180,7 @@ in
         ../../../common/home/atuin.nix
         ../../../common/home/zellij.nix
         ../../../common/home/alacritty.nix
+        ../../../common/home/syncthing.nix
         ./audio.nix
       ];
 
@@ -201,6 +204,18 @@ in
         })
         unityhub
       ];
+
+      syncthing = {
+        enable = true;
+        tray = pkgs.syncthingtray;
+        connectedDevices = [ "kate_madoka" "cider" ];
+      };
+      services.syncthing.settings.folders = {
+        "dev" = {
+          path = "/home/kate/dev";
+          devices = [ "kate_madoka" "cider" ];
+        };
+      };
 
       xdg.portal = {
         enable = true;

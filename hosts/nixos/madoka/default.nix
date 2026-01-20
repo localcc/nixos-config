@@ -20,6 +20,7 @@ let
 in
 {
   imports = [
+    ../../../common/nixos/syncthing.nix
     ./samba.nix
     ./podman.nix
     ./services
