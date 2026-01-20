@@ -34,6 +34,14 @@
       # url = "git+file:///Users/kate/dev/nixos-config-secrets";
       flake = false;
     };
+    private-services = {
+      url = "git+ssh://forgejo@ssh-git.madoka.dev:2222/localcc/nixos-private-services.git";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        secrets.follows = "secrets";
+        sing.follows = "sing";
+      };
+    };
     helium = {
       url = "github:schembriaiden/helium-browser-nix-flake";
       inputs.nixpkgs.follows = "nixpkgs";
