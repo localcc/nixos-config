@@ -31,7 +31,6 @@ in
       extraLibraries = pkgs: [
       ];
       extraPkgs = pkgs: [
-        pkgs.wineWowPackages.stagingFull
         pkgs.winetricks
       ];
     })
