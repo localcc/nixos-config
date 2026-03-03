@@ -30,7 +30,7 @@ in
                     "USER_UID" = "2012";
                     "USER_GID" = "2012";
                     "TZ" = "${timeZone}";
-                    "DATABASE_URL" = "";
+                    "DATABASE_URL" = "jdbc:mariadb://booklore_db:3306/booklore";
                 };
                 environmentFiles = [
                     config.age.secrets.madoka-booklore.path
