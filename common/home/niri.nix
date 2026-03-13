@@ -217,7 +217,7 @@ in
         }
 
         {
-          matches = [ { app-id = "microsoft-edge"; } ];
+          matches = [ { app-id = "chromium"; } ];
           open-on-workspace = "browser";
         }
 
@@ -266,7 +266,7 @@ in
             "--silent"
           ];
         }
-        { argv = [ "microsoft-edge" ]; }
+        { argv = [ "chromium" ]; }
         { argv = [ "discord" ]; }
         { argv = [ "Telegram" ]; }
         { argv = [ "signal-desktop" ]; }
