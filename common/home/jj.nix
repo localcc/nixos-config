@@ -188,7 +188,6 @@ in
           write-change-id-header = true;
 
           fetch = [
-            "upstream"
             "origin"
           ];
           push = "origin";
