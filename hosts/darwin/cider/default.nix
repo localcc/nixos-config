@@ -1,5 +1,6 @@
 {
   pkgs,
+  inputs,
   ...
 }:
 {
@@ -70,6 +71,7 @@
 
   home-manager.users.kate = { lib, ... }: {
     imports = [
+      inputs.agenix.homeManagerModules.default
       ../../../common/home
       ../../../common/home/jj.nix
       ../../../common/home/git.nix

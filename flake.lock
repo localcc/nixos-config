@@ -1015,31 +1015,6 @@
         "type": "github"
       }
     },
-    "private-services": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "secrets": [
-          "secrets"
-        ],
-        "sing": [
-          "sing"
-        ]
-      },
-      "locked": {
-        "lastModified": 1780088951,
-        "narHash": "sha256-QW1wEZ80LXdw1dkP3ttMWKEzBatfQeX/xGhEEFLJHpw=",
-        "rev": "323cabfb006aabfdf7f25e3864b08cd56d912ba9",
-        "revCount": 3,
-        "type": "git",
-        "url": "file:///home/kate/dev/nixos-private-services"
-      },
-      "original": {
-        "type": "git",
-        "url": "file:///home/kate/dev/nixos-private-services"
-      }
-    },
     "proton-cachyos": {
       "inputs": {
         "nixpkgs": [
@@ -1090,7 +1065,6 @@
         "noctalia": "noctalia",
         "nsight-graphics": "nsight-graphics",
         "opencode": "opencode",
-        "private-services": "private-services",
         "proton-cachyos": "proton-cachyos",
         "rust-overlay": "rust-overlay_3",
         "secrets": "secrets",
@@ -1162,11 +1136,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1788269773,
-        "narHash": "sha256-x4HYozouQB7Q8mAGNgfXD8wgW006MaZOH5eif4rwi5M=",
+        "lastModified": 1788278879,
+        "narHash": "sha256-Gs+tmvQU35vChkn4WD4Y3lRzHIygMvvmIJ8JDm738nQ=",
         "ref": "refs/heads/main",
-        "rev": "21db5870325040d42c0c0f7232914fce8ac8fdf3",
-        "revCount": 9,
+        "rev": "15171ca9eae68237d2e04419e0a65f677792c1e4",
+        "revCount": 10,
         "type": "git",
         "url": "ssh://forgejo@ssh-git.madoka.dev:2222/localcc/nixos-config-secrets.git"
       },

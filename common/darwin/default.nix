@@ -1,9 +1,11 @@
 {
+  inputs,
   pkgs,
   ...
 }:
   {
     imports = [
+      inputs.agenix.darwinModules.default
     ];
 
     nixpkgs.overlays = [
